@@ -4,8 +4,6 @@ path = pathlib.Path(__file__).parent.resolve()
 import sys
 sys.path.append(path)
 
-from Globals.configPaths import *
-
 from GmshMesher.GmshMesher import gmshMesher
 
 from Readers.GmshReader import readMesh
@@ -46,9 +44,10 @@ else:
     def verbosityPrint(str):
         pass
 
-def runMesher(file, h, c, nOfLevels, generateCohesiveElements):
+def runMesher(file, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
 
     RVE = numpy.load(f'{dataPath}/{file}.npz')
+
     scriptFile = f'{outputPath}/{file}.geo'
     mshFile = f'{outputPath}/{file}.msh'
 
@@ -56,7 +55,7 @@ def runMesher(file, h, c, nOfLevels, generateCohesiveElements):
     gmshMesher(RVE, h, scriptFile, mshFile)
 
     verbosityPrint('Running gmsh...')
-    os.system(f'{gmshBin} {scriptFile} -v 0 -')
+    os.system(f'gmsh {scriptFile} -v 0 -')
 
     verbosityPrint('Reading mesh file...')
     x_id, T_ei, T_fi = readMesh(mshFile)
@@ -107,7 +106,7 @@ def runMesher(file, h, c, nOfLevels, generateCohesiveElements):
     # oneFibre_3d --bulk "1,2,3,4" --bcs=boundaries
 
     verbosityPrint('Converting mesh to Alya format...')
-    os.system(f'{gmsh2alya} {outputPath}/{file}_3d --bulkcodes --bcs=boundaries --out {outputPath}{file}')
+    os.system(f'gmsh2alya.pl {outputPath}/{file}_3d --bulkcodes --bcs=boundaries --out {outputPath}{file}')
 
     nOf3dNodes = x3d_id.shape[0]
     nOf3dElements = T3d_ei.shape[0]
@@ -158,4 +157,8 @@ if __name__ == '__main__':
     # nOfLevels = 2
     # generateCohesiveElements = True
 
-    runMesher(case, h, c, nOfLevels, generateCohesiveElements)
+    basePath = f'{path}/../data/'
+    dataPath = f'{basePath}/data/'
+    outputPath = f'{basePath}/output/'
+
+    runMesher(case, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
