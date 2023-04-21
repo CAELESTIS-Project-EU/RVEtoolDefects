@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from MeshOperations import DetectMaterials, GlobalMeshFaces
 
 from Readers.GmshReader import readMesh
@@ -82,27 +80,3 @@ def createCohesiveElements(T_ei, faces_ef, e_fe, interfaces_f, mapIJ_i):
     type_q[T_ei.shape[0]:] = 7
 
     return T_qj, type_q
-
-if __name__ == '__main__':
-
-    case = 'RVE_10_10_1'
-    # case = 'twoFibres'
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    a = RVE['a']
-    b = RVE['b']
-
-    print('Reading mesh...')
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}_repaired.msh')
-    fibres = RVE['Fibre_pos']
-
-    print('Detecting materials...')
-    T_ei = DetectMaterials.detectMaterials(fibres, x_id, T_ei)
-
-    print('Obtaining global faces...')
-    faces_ef, e_fe, markedFaces_f, interfaces_f = GlobalMeshFaces.globalMeshFaces(T_ei, T_fi)
-    
-    print('Adding cohesive elements')
-    xc_id, Tc_ei, type_e = addCohesiveElements(x_id, T_ei, T_fi, faces_ef, e_fe, markedFaces_f, interfaces_f)
-
-    pass

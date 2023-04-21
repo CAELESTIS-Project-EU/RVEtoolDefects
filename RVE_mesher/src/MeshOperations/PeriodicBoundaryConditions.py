@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from Readers.GmshReader import readMesh
 from Writers.GmshWriter import writeMesh
 
@@ -104,17 +102,3 @@ def frontBackBoundaryCondition(x_id, b, tol):
             frontBackBoundaryCondition[cohesiveNode, 1] = temp
 
     return frontBackBoundaryCondition
-
-if __name__ == '__main__':
-
-    case = 'oneFibre'
-    case = 'RVE_Test_1'
-
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    a = RVE['a']
-    b = RVE['b']
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}.msh')
-
-    f1_i, e31_i, e42_i, v41_i, v42_i, v43_i = periodicBoundaryConditions(x_id, a, b)

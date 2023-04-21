@@ -1,8 +1,6 @@
 import sys
 sys.path.append('..')
 
-from Globals.configPaths import *
-
 import numpy
 
 def createRectangle(gmshScript, a, b):
@@ -65,14 +63,3 @@ def gmshMesher(RVE, h, scriptFile, mshFile):
     setoutputFile(gmshScript, mshFile)
 
     gmshScript.close()
-
-if __name__ == '__main__':
-
-    file = 'RVE_10_10_1'
-    h = 0.001
-
-    RVE = numpy.load(f'{dataPath}/{file}.npz')
-    scriptFile = f'{outputPath}/{file}.geo'
-    mshFile = f'{outputPath}/{file}.msh'
-
-    gmshMesher(RVE, h, scriptFile, mshFile)

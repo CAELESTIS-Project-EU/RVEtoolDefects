@@ -74,11 +74,3 @@ def readElements(stream):
     stream.readline()
 
     return T_fi, T_ei
-
-if __name__ == '__main__':
-
-    from Globals.configPaths import outputPath
-
-    case = 'RVE_10_10_1'
-
-    readMesh(f'{outputPath}/{case}.msh')

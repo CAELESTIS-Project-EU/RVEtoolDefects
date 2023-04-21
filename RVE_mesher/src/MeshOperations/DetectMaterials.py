@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from Readers.GmshReader import readMesh
 from Writers.GmshWriter import writeMesh
 
@@ -46,17 +44,3 @@ def detectMaterials(fibres, x_id, T_ei):
     # print(materialMap)
 
     return T_ei
-
-
-
-if __name__ == '__main__':
-    case = 'RVE_10_10_1'
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    fibres = RVE['Fibre_pos']
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}_repaired.msh')
-
-    T_fi = detectMaterials(fibres, x_id, T_fi)
-
-    writeMesh(f'{outputPath}/{case}_materials.msh', x_id, T_ei, T_fi)

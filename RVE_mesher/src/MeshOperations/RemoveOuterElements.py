@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from Readers.GmshReader import readMesh
 from Writers.GmshWriter import writeMesh
 
@@ -60,17 +58,3 @@ def markElements(mask_i, T_ei):
     mask_e[I_e] = False
 
     return mask_e
-
-if __name__ == '__main__':
-
-    case = 'RVE_10_10_1'
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    a = RVE['a']
-    b = RVE['b']
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}.msh')
-
-    x_jd, T_ej, T_fj = removeOuterElements(x_id, T_ei, T_fi, a, b)
-
-    writeMesh(f'{outputPath}/{case}_repaired.msh', x_jd, T_ej, T_fj)

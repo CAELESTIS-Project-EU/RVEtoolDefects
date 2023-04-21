@@ -1,5 +1,3 @@
-from Globals.configPaths import outputPath
-
 import numpy
 
 def readBoundaryCondition(file):
@@ -29,12 +27,3 @@ def readBoundaryCondition(file):
     bcs = map[bcs]
 
     return bcs
-
-
-
-
-if __name__ == '__main__':
-
-    case = 'oneFibre'
-
-    readBoundaryCondition(f'{outputPath}/{case}_3d.fix.bou')

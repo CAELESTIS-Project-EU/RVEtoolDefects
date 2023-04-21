@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from Readers.GmshReader import readMesh
 from Writers.GmshWriter import writeMesh
 
@@ -36,17 +34,3 @@ def detectBoundary(x_id, T_fi, l, d):
     b_f = numpy.where(marks_fi[:,0] & marks_fi[:,1])[0]
 
     return b_f
-
-if __name__ == '__main__':
-
-    case = 'RVE_10_10_1'
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    fibres = RVE['Fibre_pos']
-
-    a = RVE['a']
-    b = RVE['b']
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}_repaired.msh')
-
-    interfaces_f, b1_f, b2_f, b3_f, b4_f = detectInterfaces(x_id, T_fi, a, b)

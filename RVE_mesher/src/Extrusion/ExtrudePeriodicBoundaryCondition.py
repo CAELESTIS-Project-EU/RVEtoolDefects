@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from Readers.GmshReader import readMesh
 
 from MeshOperations import PeriodicBoundaryConditions
@@ -112,24 +110,3 @@ def oppositeFaceCondition(f_i, nOfNodes, nOfLevels):
     f3D_i[:,1] = f_i + offset
 
     return f3D_i
-
-if __name__ == '__main__':
-
-    case = 'RVE_10_10_1'
-    # case = 'oneFibre'
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    a = RVE['a']
-    b = RVE['b']
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}.msh')
-
-    nOfNodes = x_id.shape[0]
-    nOfLevels = 2
-
-    x3d_id, T3d_ei = extrudeMesh(x_id, T_ei, 1.0, nOfLevels)
-
-    f1_i, e42_i, e31_i, v41_i, v42_i, v43_i = \
-        PeriodicBoundaryConditions.periodicBoundaryConditions(x_id, a, b)
-
-    extrudeBoundaryConditions(f1_i, e42_i, e31_i, v41_i, v42_i, v43_i, nOfNodes, nOfLevels)

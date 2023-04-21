@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from Readers.GmshReader import readMesh
 
 import numpy
@@ -41,16 +39,3 @@ def globalMeshFaces(T_ei, T_fi):
     e_fe = e_fe[interfaces_f,:]
 
     return faces_ef, e_fe, markedFaces_f[interfaces_f], interfaces_f
-
-if __name__ == '__main__':
-    case = 'RVE_10_10_1'
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    a = RVE['a']
-    b = RVE['b']
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}.msh')
-
-    faces_ef, e_fe, markedFaces_f, interfaces_f, T2_fi = globalMeshFaces(T_ei, T_fi)
-
-    pass

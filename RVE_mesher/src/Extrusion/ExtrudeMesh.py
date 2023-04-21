@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from Readers.GmshReader import readMesh
 
 from Writers.Gmsh3dWriter import gmsh3DWriter
@@ -34,23 +32,3 @@ def extrudeMesh(x_id, T_ei, c, nOfLevels):
     T3d_ei = T3d_lei.reshape((nOfLevels*nOf2dElements, 9))
 
     return x3d_id, T3d_ei
-
-if __name__ == '__main__':
-
-    case = 'RVE_10_10_1'
-    # case = 'oneFibre'
-    # case = 'oneQuad'
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    a = RVE['a']
-    c = a
-    nOfLevels = 25
-
-    # c = 1.0
-    # nOfLevels = 4
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}.msh')
-
-    x3D_id, T3D_ei = extrudeMesh(x_id, T_ei, c, nOfLevels)
-
-    gmsh3DWriter(f'{outputPath}/{case}_3d.msh', x3D_id, T3D_ei)

@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from Readers.GmshReader import readMesh
 
 import numpy
@@ -40,12 +38,3 @@ def obtainBoundaryFaces(T_ei):
     T_fi = T_Fi[boundary_F]
 
     return T_fi
-
-
-if __name__ == '__main__':
-
-    case = 'RVE_10_10_1'
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}.msh')
-
-    T_fi = obtainBoundaryFaces(T_ei)

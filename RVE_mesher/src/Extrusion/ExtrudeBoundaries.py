@@ -1,5 +1,3 @@
-from Globals.configPaths import *
-
 from MeshOperations import DetectInterfaces
 
 from Readers.GmshReader import readMesh
@@ -67,27 +65,4 @@ def extrudeBoundary(b_f, T_fi, nOfLevels, nOfNodes2d, tag):
 
     return b3d_fi.reshape(((nOfLevels)*nOfEdges,5))
 
-
-
-
-
-if __name__ == '__main__':
-
-    nOfLevels = 2
-
-    # case = 'RVE_10_10_1'
-    case = 'oneFibre'
-
-    RVE = numpy.load(f'{dataPath}/{case}.npz')
-    fibres = RVE['Fibre_pos']
-
-    a = RVE['a']
-    b = RVE['b']
-
-    x_id, T_ei, T_fi = readMesh(f'{outputPath}/{case}_repaired.msh')
-
-    interfaces_f, b1_f, b2_f, b3_f, b4_f = DetectInterfaces.detectInterfaces(x_id, T_fi, a, b)
-
-    nOfNodes2d = x_id.shape[0]
-    extrudeBoundaries(T_ei, b1_f, b2_f, b3_f, b4_f, T_fi, nOfLevels, nOfNodes2d)
 
