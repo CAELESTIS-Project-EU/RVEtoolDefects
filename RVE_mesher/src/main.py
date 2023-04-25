@@ -4,6 +4,8 @@ path = pathlib.Path(__file__).parent.resolve()
 import sys
 sys.path.append(path)
 
+import shutil
+
 from GmshMesher.GmshMesher import gmshMesher
 
 from Readers.GmshReader import readMesh
@@ -143,8 +145,7 @@ if __name__ == '__main__':
     h = 0.001
     c = 0.01
     nOfLevels = 10
-   #generateCohesiveElements = True
-    generateCohesiveElements = False
+    generateCohesiveElements = True
 
     # case = 'twoFibres'
     # h = 0.25
@@ -158,11 +159,10 @@ if __name__ == '__main__':
     #nOfLevels = 2
     #generateCohesiveElements = False
 
-    basePath = f'{path}/../data'
-    dataPath = f'{basePath}/data'
-    #outputPath = f'{basePath}/output/'
-    outputPath = f'{path}/../../output/'+case+'/'
-    if not os.path.exists(outputPath):
-        os.makedirs(outputPath)
-
+    basePath = f'{path}/../..'
+    dataPath = f'{basePath}/RVE_gen/data'
+    outputPath = f'{basePath}/output/'+case+'/'
+    if os.path.exists(outputPath):
+        shutil.rmtree(f'{basePath}/output/'+case+'/')
+    os.makedirs(outputPath)
     runMesher(case, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)

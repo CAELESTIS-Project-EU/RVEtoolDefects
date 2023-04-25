@@ -1,4 +1,4 @@
-def writeAlyaSld(file,filename,kfl_timei):
+def writeAlyaSld(file,filename,kfl_timei,kfl_coh,nmate):
     """ Alya caseName.sld.dat file
     """
     
@@ -32,7 +32,7 @@ def writeAlyaSld(file,filename,kfl_timei):
     stream.write('$-------------------------------------------------------------------\n')
     stream.write('PHYSICAL_PROBLEM\n')
     stream.write('  PROBLEM_DEFINITION\n')
-    if kfl_timei == 0:
+    if kfl_timei == 'STATIC':
         stream.write('    TEMPORAL_DERIVATIVES: STATIC\n')
     else:
         stream.write('    TEMPORAL_DERIVATIVES: DYNAMIC\n')
@@ -52,10 +52,11 @@ def writeAlyaSld(file,filename,kfl_timei):
     stream.write(f'    DENSITY           = {7.8e-9:1.4e}\n' )
     stream.write('    CONSTITUTIVE_MODEL: ORTHOTROPIC \ \n')
     stream.write(f'      {2.30969e+05:1.4e} {1.63346e+04:1.4e} {1.48991e+04:1.4e} {0.20597:1.4f} {0.210491:1.4f} {0.0705096:1.4f} {1.5481e+04:1.4e} {1.47437e+04:1.4e} {6.48991e+03:1.4e}\n')
-    stream.write('    MATERIAL          = 4\n')
-    stream.write(f'    DENSITY           = {7.8e-9:1.4e} {1e+6:1.1e}\n')
-    stream.write('    COHESIVE_MODEL: TURON, CURRENT \ \n')
-    stream.write(f'      {0.308:1.4f} {0.828:1.4f} {19.0:1.4f} {31.2:1.4f} {1.75:1.4f} {1e6:1.1e} {0.0:1.4f} {0.0:1.4f} {0.001:1.4f}\n')
+    if kfl_coh == True:
+        stream.write(f'    MATERIAL          = {nmate}\n')
+        stream.write(f'    DENSITY           = {7.8e-9:1.4e} {1e+6:1.1e}\n')
+        stream.write('    COHESIVE_MODEL: TURON, CURRENT \ \n')
+        stream.write(f'      {0.308:1.4f} {0.828:1.4f} {19.0:1.4f} {31.2:1.4f} {1.75:1.4f} {1e6:1.1e} {0.0:1.4f} {0.0:1.4f} {0.001:1.4f}\n')
     stream.write('  END_PROPERTIES\n')
     stream.write('  PARAMETERS\n')
     stream.write('    CSYS_MATERIAL: FIELD= 1, VECTORS\n')

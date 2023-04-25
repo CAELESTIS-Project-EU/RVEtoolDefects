@@ -4,6 +4,9 @@ path = pathlib.Path(__file__).parent.resolve()
 import sys
 sys.path.append(path)
 
+from Readers.ReadAlyaMat import readAlyaMat
+from Readers.ReadAlyaCha import readAlyaCha
+
 from Writers.WriteAlyaDat import writeAlyaDat
 from Writers.WriteAlyaKer import writeAlyaKer
 from Writers.WriteAlyaSld import writeAlyaSld
@@ -21,26 +24,31 @@ else:
     def verbosityPrint(str):
         pass
 
-def run(file, generateCohesiveElements):
+def run(file):
 
     verbosityPrint('Writing Alya files...')
     writeAlyaDat(f'{outputPath}{file}.dat',file)
     writeAlyaKer(f'{outputPath}{file}.ker.dat')
-    writeAlyaSld(f'{outputPath}{file}.sld.dat',file,0)
     writeAlyaPos(f'{outputPath}{file}.post.alyadat')
+    
+    nOfMaterials = readAlyaMat(f'{outputPath}{file}.mat.dat')
+
+    kfl_coh = False
+    if os.path.exists(f'{outputPath}{file}.cha.dat'):
+        kfl_coh = readAlyaCha(f'{outputPath}{file}.cha.dat')
+
+    writeAlyaSld(f'{outputPath}{file}.sld.dat',file,'STATIC',kfl_coh,nOfMaterials)
     
 if __name__ == '__main__':
 
-#    case = 'oneFibre'
-#generateCohesiveElements = False
+    #case = 'oneFibre'
     case = 'RVE_Test_1'
-    generateCohesiveElements = False
 
-    basePath = f'{path}/../data'
-    dataPath = f'{basePath}/data'
+    basePath = f'{path}/../..'
+    dataPath = f'{basePath}/RVE_gen/data'
     outputPath = f'{path}/../../output/'+case+'/'
     print(outputPath)
     if not os.path.exists(outputPath):
         os.makedirs(outputPath)
         
-    run(case,generateCohesiveElements)
+    run(case)

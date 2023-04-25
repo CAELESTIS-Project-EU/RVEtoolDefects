@@ -19,7 +19,6 @@ def readBoundaryCondition(file):
         else:
             bcs_list.append(int(line.split()[1]))
 
-
     bcs = numpy.array(bcs_list)
 
     map = numpy.array([0,1,2,3,4,1,2,3,4,5,6], dtype = 'int')
