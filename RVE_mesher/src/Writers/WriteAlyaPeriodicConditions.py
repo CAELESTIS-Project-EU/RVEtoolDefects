@@ -6,7 +6,7 @@ def writePeriodicConditions(file, pbcs_i):
 
     nOfPbcs = pbcs_i.shape[0]
     for i in range(nOfPbcs):
-        stream.write(f'{pbcs_i[i,0]} {pbcs_i[i,1]} \n')
+        stream.write(f'{pbcs_i[i,0]+1} {pbcs_i[i,1]+1} \n')
 
     stream.write('END_LMAST\n')
 
