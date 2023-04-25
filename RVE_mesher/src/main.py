@@ -124,7 +124,7 @@ def runMesher(file, dataPath, outputPath, h, c, nOfLevels, generateCohesiveEleme
 
     writePeriodicConditions(f'{outputPath}{file}.per.dat', pbcs_i)
 
-    writeAlyaDom(f'{outputPath}{file}.dom.dat', case, dim, nOfMaterials)
+    writeAlyaDom(f'{outputPath}{file}.dom.dat', case, dim, nOfMaterials, generateCohesiveElements)
     writeAlyaSet(f'{outputPath}{file}.set.dat', nOf3dElements)
 
     verbosityPrint('Done!')
@@ -139,11 +139,12 @@ if __name__ == '__main__':
     # nOfLevels = 10
     # generateCohesiveElements = True
 
-    case = 'RVE_Test_1'
-    h = 0.001
-    c = 0.01
-    nOfLevels = 10
-    generateCohesiveElements = True
+    #case = 'RVE_Test_1'
+    #h = 0.001
+    #c = 0.01
+    #nOfLevels = 10
+   #generateCohesiveElements = True
+    #generateCohesiveElements = False
 
     # case = 'twoFibres'
     # h = 0.25
@@ -151,14 +152,17 @@ if __name__ == '__main__':
     # nOfLevels = 2
     # generateCohesiveElements = True
 
-    # case = 'oneFibre'
-    # h = 0.25
-    # c = 1
-    # nOfLevels = 2
-    # generateCohesiveElements = True
+    case = 'oneFibre'
+    h = 0.25
+    c = 1
+    nOfLevels = 2
+    generateCohesiveElements = False
 
-    basePath = f'{path}/../data/'
-    dataPath = f'{basePath}/data/'
-    outputPath = f'{basePath}/output/'
+    basePath = f'{path}/../data'
+    dataPath = f'{basePath}/data'
+    #outputPath = f'{basePath}/output/'
+    outputPath = f'{path}/../../output/'+case+'/'
+    if not os.path.exists(outputPath):
+        os.makedirs(outputPath)
 
     runMesher(case, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)

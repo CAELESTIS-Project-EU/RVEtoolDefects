@@ -1,4 +1,4 @@
-def writeAlyaDom(file, filename, ndime, nmate):
+def writeAlyaDom(file, filename, ndime, nmate, generateCohesiveElements):
     """ Alya caseName.dom.dat file
     """
     
@@ -30,7 +30,8 @@ def writeAlyaDom(file, filename, ndime, nmate):
     stream.write('GEOMETRY\n')
     stream.write('  INCLUDE ./%s.geo.dat\n' % filename)
     stream.write('  INCLUDE ./%s.mat.dat\n' % filename)
-    stream.write('  INCLUDE ./%s.cha.dat\n' % filename)
+    if generateCohesiveElements:
+        stream.write('  INCLUDE ./%s.cha.dat\n' % filename)
     stream.write('  INCLUDE ./%s.per.dat\n' % filename)
     stream.write('END_GEOMETRY\n')
     stream.write('$-------------------------------------------------------------------\n')

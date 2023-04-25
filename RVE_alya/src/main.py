@@ -21,7 +21,7 @@ else:
     def verbosityPrint(str):
         pass
 
-def run(file):
+def run(file, generateCohesiveElements):
 
     verbosityPrint('Writing Alya files...')
     writeAlyaDat(f'{outputPath}{file}.dat',file)
@@ -31,6 +31,16 @@ def run(file):
     
 if __name__ == '__main__':
 
-    case = 'RVE_10_10_1'
+    case = 'oneFibre'
+    generateCohesiveElements = False
+   #case = 'RVE_Test_1'
+   #generateCohesiveElements = False
 
-    run(case)
+    basePath = f'{path}/../data'
+    dataPath = f'{basePath}/data'
+    outputPath = f'{path}/../../output/'+case+'/'
+    print(outputPath)
+    if not os.path.exists(outputPath):
+        os.makedirs(outputPath)
+        
+    run(case,generateCohesiveElements)
