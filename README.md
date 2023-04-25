@@ -1,7 +1,7 @@
 # RVEtool
 
 
-
+<!--
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
@@ -50,9 +50,7 @@ When you're ready to make this README your own, just edit this file and use the 
 
 ## Suggestions for a good README
 Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
+-->
 
 ## Description
 <!--
@@ -60,6 +58,10 @@ Let people know what your project can do specifically. Provide context and add a
 -->
 RVEtool is a modeling package with different tools to generate, mesh and run FEA of micromechanical models for obtaining engineering properties for fiber-reinforced materials including the presence of defects.
 
+  * **RVE_gen** : Algorithm for the generation of RVEs.
+  * **RVE_mesher** : Gmsh as the main 2-d and 3-d finite element mesh generator with built-in pre processing facilities.
+  * **RVE_alya** : Alya as the main FEA solver for High-Performance Computing.
+  
 ## Badges
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 
