@@ -31,10 +31,10 @@ def run(file, generateCohesiveElements):
     
 if __name__ == '__main__':
 
-    case = 'oneFibre'
+#    case = 'oneFibre'
+#generateCohesiveElements = False
+    case = 'RVE_Test_1'
     generateCohesiveElements = False
-   #case = 'RVE_Test_1'
-   #generateCohesiveElements = False
 
     basePath = f'{path}/../data'
     dataPath = f'{basePath}/data'

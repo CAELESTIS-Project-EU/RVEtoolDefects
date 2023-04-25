@@ -139,12 +139,12 @@ if __name__ == '__main__':
     # nOfLevels = 10
     # generateCohesiveElements = True
 
-    #case = 'RVE_Test_1'
-    #h = 0.001
-    #c = 0.01
-    #nOfLevels = 10
+    case = 'RVE_Test_1'
+    h = 0.001
+    c = 0.01
+    nOfLevels = 10
    #generateCohesiveElements = True
-    #generateCohesiveElements = False
+    generateCohesiveElements = False
 
     # case = 'twoFibres'
     # h = 0.25
@@ -152,11 +152,11 @@ if __name__ == '__main__':
     # nOfLevels = 2
     # generateCohesiveElements = True
 
-    case = 'oneFibre'
-    h = 0.25
-    c = 1
-    nOfLevels = 2
-    generateCohesiveElements = False
+    #case = 'oneFibre'
+    #h = 0.25
+    #c = 1
+    #nOfLevels = 2
+    #generateCohesiveElements = False
 
     basePath = f'{path}/../data'
     dataPath = f'{basePath}/data'
