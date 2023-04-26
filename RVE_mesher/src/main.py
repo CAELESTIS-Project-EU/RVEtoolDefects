@@ -145,7 +145,7 @@ if __name__ == '__main__':
     h = 0.001
     c = 0.01
     nOfLevels = 10
-    generateCohesiveElements = True
+    generateCohesiveElements = False
 
     # case = 'twoFibres'
     # h = 0.25
@@ -159,6 +159,12 @@ if __name__ == '__main__':
     #nOfLevels = 2
     #generateCohesiveElements = False
 
+    #case = 'RVE_1x1_with_voids_1'
+    #h = 0.028
+    #c = 0.028
+    #nOfLevels = 10
+    #generateCohesiveElements = False
+    
     basePath = f'{path}/../..'
     dataPath = f'{basePath}/RVE_gen/data'
     outputPath = f'{basePath}/output/'+case+'/'

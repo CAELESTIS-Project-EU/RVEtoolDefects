@@ -43,11 +43,11 @@ if __name__ == '__main__':
 
     #case = 'oneFibre'
     case = 'RVE_Test_1'
+    #case = 'RVE_1x1_with_voids_1'
 
     basePath = f'{path}/../..'
     dataPath = f'{basePath}/RVE_gen/data'
     outputPath = f'{path}/../../output/'+case+'/'
-    print(outputPath)
     if not os.path.exists(outputPath):
         os.makedirs(outputPath)
         
