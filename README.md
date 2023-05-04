@@ -58,7 +58,7 @@ Let people know what your project can do specifically. Provide context and add a
 -->
 RVEtool is a modeling package with different tools to generate, mesh and run FEA of micromechanical models for obtaining engineering properties for fiber-reinforced materials including the presence of defects.
 
-  * **RVE_gen** : Algorithm for the generation of RVEs.
+  * **RVE_gen** : Appropiate algorithm for the generation of RVEs in `.npz` format.
   * **RVE_mesher** : Gmsh as the main 2-d and 3-d finite element mesh generator with built-in pre processing facilities.
   * **RVE_alya** : Alya as the main FEA solver for High-Performance Computing.
   
