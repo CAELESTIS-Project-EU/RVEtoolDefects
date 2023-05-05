@@ -135,17 +135,17 @@ def runMesher(file, dataPath, outputPath, h, c, nOfLevels, generateCohesiveEleme
 
 if __name__ == '__main__':
 
-    # case = 'RVE_10_10_1'
-    # h = 0.001
-    # c = 0.01
-    # nOfLevels = 10
-    # generateCohesiveElements = True
+    #case = 'RVE_10_10_1'
+    #h = 0.001
+    #c = 0.01
+    #nOfLevels = 10
+    #generateCohesiveElements = False
 
-    case = 'RVE_Test_1'
-    h = 0.001
-    c = 0.01
-    nOfLevels = 10
-    generateCohesiveElements = False
+    #case = 'RVE_Test_1'
+    #h = 0.001
+    #c = 0.01
+    #nOfLevels = 10
+    #generateCohesiveElements = False
 
     # case = 'twoFibres'
     # h = 0.25
@@ -159,11 +159,11 @@ if __name__ == '__main__':
     #nOfLevels = 2
     #generateCohesiveElements = False
 
-    #case = 'RVE_1x1_with_voids_1'
-    #h = 0.028
-    #c = 0.028
-    #nOfLevels = 10
-    #generateCohesiveElements = False
+    case = 'RVE_1x1_with_voids_1'
+    h = 0.0005   # in-plane size
+    c = 0.028   # out-plane thickness
+    nOfLevels = 10
+    generateCohesiveElements = True
     
     basePath = f'{path}/../..'
     dataPath = f'{basePath}/RVE_gen/data'
