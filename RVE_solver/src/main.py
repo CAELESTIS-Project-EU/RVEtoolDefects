@@ -41,11 +41,11 @@ def run(file):
     
 if __name__ == '__main__':
 
-    #case = 'RVE_10_10_1'
+    case = 'RVE_10_10_1'
     #case = 'RVE_Test_1'
     #case = 'twoFibres'
     #case = 'oneFibre'
-    case = 'RVE_1x1_with_voids_1'
+    #case = 'RVE_1x1_with_voids_1'
 
     basePath = f'{path}/../..'
     dataPath = f'{basePath}/RVE_gen/data'
