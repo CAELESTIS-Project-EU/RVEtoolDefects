@@ -74,7 +74,7 @@ def createCohesiveElements(T_ei, faces_ef, e_fe, interfaces_f, mapIJ_i):
         T_qj[nOfElements+f,2:4] = mapIJ_i[localFaces_ei[0,:]]
 
     fibres_e = numpy.where((T_qj[:,-1] != 0) & (T_qj[:,-1] != cohesiveMaterial))[0]
-    T_qj[fibres_e,:] = mapIJ_i[T_qj[fibres_e,:]]
+    T_qj[fibres_e,0:4] = mapIJ_i[T_qj[fibres_e,0:4]]
 
     type_q = numpy.zeros(T_qj.shape[0], dtype='int')
     type_q[T_ei.shape[0]:] = 7
