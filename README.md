@@ -27,9 +27,24 @@ RVEtool is a modeling package with different tools for meshing and run FEA of mi
 - Iterative solvers for symmetric and unsymmetric matrices.
 - ...
 
-## Installation
+## Pre-requisites
 
-Add this in your `PATH`:
+*Step 1:* Install Python3.0
+- Download [Python](https://www.python.org).
+- After its installation, open Terminal (macOS) or Command prompt (Windows) and go to the root of the folder and type the following command:
+
+```
+python -m pip install -r requirements.txt
+```
+
+*Step 2:* Install Gmsh
+- Download [Gmsh](https://gmsh.info)  software. 
+- Double-click the downloaded file and follow the installation wizard to finish the installation.
+- Add this in your `PATH`:
 ```
 export PATH=`gmsh_path:$PATH
 ```
+
+## Usage
+Each folder contains a `main.py` file with the corresponding user inputs.
+

@@ -6,6 +6,8 @@ sys.path.append(path)
 
 import shutil
 
+import time
+
 from GmshMesher.GmshMesher import gmshMesher
 
 from Readers.GmshReader import readMesh
@@ -115,7 +117,7 @@ def runMesher(file, dataPath, outputPath, h, c, nOfLevels, generateCohesiveEleme
     dim = 3
     nOfMaterials = 4
 
-    verbosityPrint('Writing Alya files...')
+    verbosityPrint('Writing extra Alya mesh files...')
     if generateCohesiveElements:
         writeElementType(f'{outputPath}{file}.cha.dat', type_e, nOfLevels)
 
@@ -135,11 +137,16 @@ def runMesher(file, dataPath, outputPath, h, c, nOfLevels, generateCohesiveEleme
 
 if __name__ == '__main__':
 
-    case = 'RVE_10_10_1'
-    h = 0.001
-    c = 0.01
-    nOfLevels = 10
-    generateCohesiveElements = False
+    # Get the start time
+    st = time.time()
+
+    # User inputs
+    
+    #case = 'RVE_10_10_1'
+    #h = 0.001
+    #c = 0.01
+    #nOfLevels = 10
+    #generateCohesiveElements = False
 
     #case = 'RVE_Test_1'
     #h = 0.001
@@ -159,11 +166,11 @@ if __name__ == '__main__':
     #nOfLevels = 2
     #generateCohesiveElements = False
 
-    #case = 'RVE_1x1_with_voids_1'
-    #h = 0.0005   # in-plane size
-    #c = 0.028   # out-plane thickness
-    #nOfLevels = 10
-    #generateCohesiveElements = True
+    case = 'RVE_1x1_with_voids_1'
+    h = 0.0005   # in-plane size
+    c = 0.028   # out-plane thickness
+    nOfLevels = 10
+    generateCohesiveElements = True
     
     basePath = f'{path}/../..'
     dataPath = f'{basePath}/RVE_gen/data'
@@ -172,3 +179,12 @@ if __name__ == '__main__':
         shutil.rmtree(f'{basePath}/output/'+case+'/')
     os.makedirs(outputPath)
     runMesher(case, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
+
+    # Get the end time
+    et = time.time()
+
+    # Get the execution time
+    elapsed_time = et - st
+
+    if VERBOSITY == 1:
+        print('Execution time:', round(elapsed_time,2), 'seconds')

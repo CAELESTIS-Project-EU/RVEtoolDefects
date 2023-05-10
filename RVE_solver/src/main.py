@@ -4,6 +4,8 @@ path = pathlib.Path(__file__).parent.resolve()
 import sys
 sys.path.append(path)
 
+import time
+
 from Readers.ReadAlyaMat import readAlyaMat
 from Readers.ReadAlyaCha import readAlyaCha
 
@@ -26,7 +28,7 @@ else:
 
 def run(file):
 
-    verbosityPrint('Writing Alya files...')
+    verbosityPrint('Writing Alya configuration files...')
     writeAlyaDat(f'{outputPath}{file}.dat',file)
     writeAlyaKer(f'{outputPath}{file}.ker.dat')
     writeAlyaPos(f'{outputPath}{file}.post.alyadat')
@@ -41,11 +43,14 @@ def run(file):
     
 if __name__ == '__main__':
 
-    case = 'RVE_10_10_1'
+    # Get the start time
+    st = time.time()
+    
+    #case = 'RVE_10_10_1'
     #case = 'RVE_Test_1'
     #case = 'twoFibres'
     #case = 'oneFibre'
-    #case = 'RVE_1x1_with_voids_1'
+    case = 'RVE_1x1_with_voids_1'
 
     basePath = f'{path}/../..'
     dataPath = f'{basePath}/RVE_gen/data'
@@ -54,3 +59,12 @@ if __name__ == '__main__':
         os.makedirs(outputPath)
         
     run(case)
+
+    # Get the end time
+    et = time.time()
+
+    # Get the execution time
+    elapsed_time = et - st
+    
+    if VERBOSITY == 1:
+        print('Execution time:', round(elapsed_time,2), 'seconds')
