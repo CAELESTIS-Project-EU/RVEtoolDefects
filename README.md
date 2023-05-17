@@ -4,7 +4,7 @@
 
 ## Description
 <!--
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.A
 -->
 RVEtool is a modeling package with different tools for meshing and run FEA of micromechanical models based on fiber-reinforced materials including the presence of defects. The different packages are devised to run in High-Performance Computing environments.
 
