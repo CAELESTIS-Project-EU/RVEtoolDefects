@@ -1,0 +1,3 @@
+[submodule "RVE_mesher/gmsh"]
+	path = RVE_mesher/gmsh
+	url = https://gitlab.onelab.info/gmsh/gmsh.git
