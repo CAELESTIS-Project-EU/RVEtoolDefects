@@ -1,4 +1,4 @@
-def writeAlyaDat(file,filename ):
+def writeAlyaDat(file, filename, dash_iload, debug):
     """ Alya caseName.dat file
     """
     
@@ -6,10 +6,14 @@ def writeAlyaDat(file,filename ):
     
     stream.write('$-------------------------------------------------------------------\n')
     stream.write('RUN_DATA\n')
-    stream.write(f'  ALYA:                   {filename:s}\n')
+    stream.write(f'  ALYA:                   {filename+dash_iload:s}\n')
     stream.write('  CODE=                   1\n')
-    stream.write('  LIVE_INFO:              SCREEN\n')
-    stream.write('  LOG_FILE:               ON\n')
+    if debug:
+        stream.write('  LIVE_INFO:              SCREEN\n')
+        stream.write('  LOG_FILE:               ON\n')
+    else:
+        stream.write('  LIVE_INFO:              FILE\n')
+        stream.write('  LOG_FILE:               OFF\n')        
     stream.write('END_RUN_DATA\n')
     stream.write('$-------------------------------------------------------------------\n')
     stream.write('PROBLEM_DATA\n')

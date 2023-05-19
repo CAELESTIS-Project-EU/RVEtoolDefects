@@ -1,6 +1,3 @@
-from Readers.GmshReader import readMesh
-from Writers.GmshWriter import writeMesh
-
 import numpy
 
 def periodicBoundaryConditions(x_id, a, b, tol = 1.e-8):

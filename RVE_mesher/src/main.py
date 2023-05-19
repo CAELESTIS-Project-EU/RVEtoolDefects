@@ -19,7 +19,6 @@ from Writers.WriteAlyaElementType import writeElementType
 from Writers.WriteAlyaElementLocalDirections import writeElementLocalDirections
 from Writers.WriteAlyaBoundaryCondition import writeBoundaryCondition
 from Writers.WriteAlyaPeriodicConditions import writePeriodicConditions
-from Writers.WriteAlyaDom import writeAlyaDom
 from Writers.WriteAlyaSet import writeAlyaSet
 
 from MeshOperations import \
@@ -128,20 +127,19 @@ def runMesher(file, dataPath, outputPath, h, c, nOfLevels, generateCohesiveEleme
 
     writePeriodicConditions(f'{outputPath}{file}.per.dat', pbcs_i)
 
-    writeAlyaDom(f'{outputPath}{file}.dom.dat', case, dim, nOfMaterials, generateCohesiveElements)
     writeAlyaSet(f'{outputPath}{file}.set.dat', nOf3dElements)
 
     verbosityPrint('Done!')
-
-
 
 if __name__ == '__main__':
 
     # Get the start time
     st = time.time()
-
-    # User inputs
     
+    #-------------------------------------------------------------------
+    # User inputs
+    #-------------------------------------------------------------------
+
     #case = 'RVE_10_10_1'
     #h = 0.001
     #c = 0.01
@@ -171,13 +169,18 @@ if __name__ == '__main__':
     c = 0.028   # out-plane thickness
     nOfLevels = 10
     generateCohesiveElements = True
+
+    #-------------------------------------------------------------------
     
+    # Set paths   
     basePath = f'{path}/../..'
     dataPath = f'{basePath}/RVE_gen/data'
-    outputPath = f'{basePath}/output/'+case+'/'
+    outputPath = f'{basePath}/output/'+case+'/msh/'
     if os.path.exists(outputPath):
-        shutil.rmtree(f'{basePath}/output/'+case+'/')
+        shutil.rmtree(f'{basePath}/output/'+case+'/msh/')
     os.makedirs(outputPath)
+
+    # Run mesher
     runMesher(case, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
 
     # Get the end time
