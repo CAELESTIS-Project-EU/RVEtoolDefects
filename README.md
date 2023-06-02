@@ -58,9 +58,9 @@ The RVE model generated here referred to as `jobName` is stored in the `output` 
 The directory tree for the output folder is the following:
 ```bash
 .
-├── outputs\
-│   ├── jobName\ 
-│   │   ├── msh\ is the folder containing the mesh files
+                outputs\
+                        jobName\ 
+                                 msh\ is the folder containing the mesh files
 │   │   │   ├── jobName.dims.dat 
 │   │   │   ├── jobName.mat.dat
 │   │   │   ├── jobName.fie.dat
@@ -102,6 +102,5 @@ Not defined yet.
 
 
 ## Support
-:envelope: Gerard Guillamet: <gerard.guillamet@bsc.es>
-
-:envelope: Eloi Ruiz-Gironés: <eloi.ruizgirones@bsc.es>
+:e-mail: Gerard Guillamet: <gerard.guillamet@bsc.es>\
+:e-mail: Eloi Ruiz-Gironés: <eloi.ruizgirones@bsc.es>
