@@ -49,6 +49,9 @@ else:
 
 def runMesher(file, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
 
+    # Get the start time
+    t1 = time.time()
+    
     RVE = numpy.load(f'{dataPath}/{file}.npz')
 
     scriptFile = f'{outputPath}/{file}.geo'
@@ -107,7 +110,9 @@ def runMesher(file, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generate
     gmsh3DWriter(f'{outputPath}/{file}_3d.msh', x3d_id, T3d_ei, T3d_fi)
 
     # oneFibre_3d --bulk "1,2,3,4" --bcs=boundaries
-
+    
+    t2 = time.time()
+        
     verbosityPrint('Converting mesh to Alya format...')
     os.system(f'gmsh2alya.pl {outputPath}/{file}_3d --bulkcodes --bcs=boundaries --out {outputPath}{file}')
 
@@ -131,10 +136,16 @@ def runMesher(file, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generate
 
     verbosityPrint('Done!')
 
-if __name__ == '__main__':
+    t3 = time.time()
 
-    # Get the start time
-    st = time.time()
+    if VERBOSITY == 1:
+        print('Mesh generation time:', round(t2-t1,2), 'seconds')
+        print('Mesh conversion time:', round(t3-t2,2), 'seconds')
+        print('Total execution time:', round(t3-t1,2), 'seconds')
+        
+    return
+
+if __name__ == '__main__':
     
     #-------------------------------------------------------------------
     # User inputs
@@ -187,11 +198,4 @@ if __name__ == '__main__':
     # Run mesher
     runMesher(case, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
 
-    # Get the end time
-    et = time.time()
 
-    # Get the execution time
-    elapsed_time = et - st
-
-    if VERBOSITY == 1:
-        print('Execution time:', round(elapsed_time,2), 'seconds')
