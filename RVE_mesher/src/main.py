@@ -47,7 +47,7 @@ else:
     def verbosityPrint(str):
         pass
 
-def runMesher(file, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
+def runMesher(file, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
 
     RVE = numpy.load(f'{dataPath}/{file}.npz')
 
@@ -58,7 +58,7 @@ def runMesher(file, dataPath, outputPath, h, c, nOfLevels, generateCohesiveEleme
     gmshMesher(RVE, h, scriptFile, mshFile)
 
     verbosityPrint('Running gmsh...')
-    os.system(f'gmsh {scriptFile} -v 0 -')
+    os.system(f'{gmshBinFile} {scriptFile} -v 0 -')
 
     verbosityPrint('Reading mesh file...')
     x_id, T_ei, T_fi = readMesh(mshFile)
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     #-------------------------------------------------------------------
     
-    # Set paths   
+    # Set paths for directories  
     basePath = f'{path}/../..'
     dataPath = f'{basePath}/RVE_gen/data'
     outputPath = f'{basePath}/output/'+case+'/msh/'
@@ -180,8 +180,12 @@ if __name__ == '__main__':
         shutil.rmtree(f'{basePath}/output/'+case+'/msh/')
     os.makedirs(outputPath)
 
+    # Set paths for binaries
+    gmshBinFile = 'gmsh'
+    #gmshBinFile = '/gpfs/projects/bsce81/gmsh/gmsh-4.11.1-Linux64/bin/gmsh'
+    
     # Run mesher
-    runMesher(case, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
+    runMesher(case, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
 
     # Get the end time
     et = time.time()
