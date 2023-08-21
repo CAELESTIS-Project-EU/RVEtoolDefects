@@ -8,11 +8,13 @@ import time
 
 from Readers.ReadAlyaMat import readAlyaMat
 from Readers.ReadAlyaCha import readAlyaCha
+from Readers.ReadAlyaGeo import readAlyaGeo
 
 from Writers.WriteAlyaDat import writeAlyaDat
 from Writers.WriteAlyaKer import writeAlyaKer
 from Writers.WriteAlyaDom import writeAlyaDom
-from Writers.WriteAlyaSld import writeAlyaSld
+from Writers.WriteAlyaSld import writeAlyaSld3D
+from Writers.WriteAlyaSld import writeAlyaSld2D
 from Writers.WriteAlyaPos import writeAlyaPos
 
 import numpy
@@ -46,12 +48,14 @@ def run(file, meshPath, outputPath, iload, debug):
     if os.path.exists(f'{meshPath}{file}.cha.dat'):
         kfl_coh = readAlyaCha(f'{meshPath}{file}.cha.dat')
 
-    dim = 3
+    dim, lx, ly, lz = readAlyaGeo(f'{meshPath}{file}.geo.dat')
+        
     writeAlyaDom(f'{outputPath}{file}{dash_iload}.dom.dat', file, dim, nOfMaterials, kfl_coh)
-    lx = 1.0
-    ly = 1.0
-    lz = 1.0
-    writeAlyaSld(f'{outputPath}{file}{dash_iload}.sld.dat', file, dash_iload, 'STATIC', kfl_coh, nOfMaterials, iload, lx, ly, lz, debug)
+
+    if dim == 2:
+        writeAlyaSld2D(f'{outputPath}{file}{dash_iload}.sld.dat', file, dash_iload, 'STATIC', kfl_coh, nOfMaterials, iload, lx, ly, lz, debug)
+    else:
+        writeAlyaSld3D(f'{outputPath}{file}{dash_iload}.sld.dat', file, dash_iload, 'STATIC', kfl_coh, nOfMaterials, iload, lx, ly, lz, debug)
     
 if __name__ == '__main__':
 
@@ -68,7 +72,7 @@ if __name__ == '__main__':
     #case = 'twoFibres'
     #case = 'oneFibre'
     case = 'RVE_1x1_with_voids_1'
-    listloads = ['11', '22', '12', '23']
+    listloads = ['11', '22', '12']
 
     #-------------------------------------------------------------------
 
