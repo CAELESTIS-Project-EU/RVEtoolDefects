@@ -47,7 +47,7 @@ else:
     def verbosityPrint(str):
         pass
 
-def runMesher(file, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
+def runMesher(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
 
     # Get the start time
     t1 = time.time()
@@ -114,7 +114,7 @@ def runMesher(file, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generate
     t2 = time.time()
         
     verbosityPrint('Converting mesh to Alya format...')
-    os.system(f'gmsh2alya.pl {outputPath}/{file}_3d --bulkcodes --bcs=boundaries --out {outputPath}{file}')
+    os.system(f'{gmsh2alya} {outputPath}/{file}_3d --bulkcodes --bcs=boundaries --out {outputPath}{file}')
 
     nOf3dNodes = x3d_id.shape[0]
     nOf3dElements = T3d_ei.shape[0]
@@ -194,8 +194,12 @@ if __name__ == '__main__':
     # Set paths for binaries
     gmshBinFile = 'gmsh'
     #gmshBinFile = '/gpfs/projects/bsce81/gmsh/gmsh-4.11.1-Linux64/bin/gmsh'
+
+    # Set paths for binaries
+    gmsh2alya = 'gmsh2alya.pl'
+    #gmsh2alya = '/gpfs/projects/bsce81/alya/builds/gmsh2alya.pl'
     
     # Run mesher
-    runMesher(case, gmshBinFile, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
+    runMesher(case, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
 
 
