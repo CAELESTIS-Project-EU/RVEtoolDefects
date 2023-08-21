@@ -1,9 +1,3 @@
-import pathlib
-path = pathlib.Path(__file__).parent.resolve()
-
-import sys
-sys.path.append(path)
-
 import shutil
 
 import time
@@ -22,8 +16,8 @@ from Writers.WriteAlyaPeriodicConditions import writePeriodicConditions
 from Writers.WriteAlyaSet import writeAlyaSet
 
 from MeshOperations import \
-    RemoveOuterElements,\
-    DetectMaterials,\
+    RemoveOuterElements, \
+    DetectMaterials, \
     DetectInterfaces, \
     GlobalMeshFaces, \
     AddCohesiveElements, \
@@ -47,11 +41,10 @@ else:
     def verbosityPrint(str):
         pass
 
-def runMesher(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
-
+def mesher3D(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
     # Get the start time
     t1 = time.time()
-    
+
     RVE = numpy.load(f'{dataPath}/{file}.npz')
 
     scriptFile = f'{outputPath}/{file}.geo'
@@ -71,7 +64,7 @@ def runMesher(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevel
 
     verbosityPrint('Removing outer elements...')
     x_id, T_ei, T_fi = RemoveOuterElements.removeOuterElements(x_id, T_ei, T_fi, a, b)
-    writeMesh(f'{outputPath}/{case}_repaired.msh', x_id, T_ei, T_fi)
+    # writeMesh(f'{outputPath}/{file}_repaired.msh', x_id, T_ei, T_fi)
 
     verbosityPrint('Detecting materials...')
     T_ei = DetectMaterials.detectMaterials(RVE['Fibre_pos'], x_id, T_ei)
@@ -81,8 +74,8 @@ def runMesher(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevel
 
     if generateCohesiveElements:
         verbosityPrint('Adding cohesive elements...')
-        x_id, T_ei, type_e = AddCohesiveElements.addCohesiveElements(x_id, T_ei, T_fi, faces_ef, e_fe, markedFaces_f, interfaces_f)
-
+        x_id, T_ei, type_e = AddCohesiveElements.addCohesiveElements(x_id, T_ei, T_fi, faces_ef, e_fe,
+                                                                     markedFaces_f, interfaces_f)
         verbosityPrint('Obtaining new boundary faces...')
         T_fi = ObtainBoundaryFaces.obtainBoundaryFaces(T_ei)
 
@@ -101,7 +94,8 @@ def runMesher(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevel
     T3d_fi = ExtrudeBoundaries.extrudeBoundaries(T_ei, b1_f, b2_f, b3_f, b4_f, T_fi, nOfLevels, nOfNodes2d)
 
     verbosityPrint('Extruding periodic conditions')
-    pbcs_i = ExtrudePeriodicBoundaryCondition.extrudeBoundaryConditions(f1_i, e42_i, e31_i, v41_i, v42_i, v43_i, nOfNodes2d, nOfLevels)
+    pbcs_i = ExtrudePeriodicBoundaryCondition.extrudeBoundaryConditions(f1_i, e42_i, e31_i, v41_i, v42_i, v43_i,
+                                                                        nOfNodes2d, nOfLevels)
 
     verbosityPrint('Writing 2d mesh (gmsh)...')
     writeMesh(f'{outputPath}/{file}_2d.msh', x_id, T_ei, T_fi)
@@ -110,16 +104,13 @@ def runMesher(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevel
     gmsh3DWriter(f'{outputPath}/{file}_3d.msh', x3d_id, T3d_ei, T3d_fi)
 
     # oneFibre_3d --bulk "1,2,3,4" --bcs=boundaries
-    
+
     t2 = time.time()
-        
+
     verbosityPrint('Converting mesh to Alya format...')
     os.system(f'{gmsh2alya} {outputPath}/{file}_3d --bulkcodes --bcs=boundaries --out {outputPath}{file}')
 
-    nOf3dNodes = x3d_id.shape[0]
     nOf3dElements = T3d_ei.shape[0]
-    dim = 3
-    nOfMaterials = 4
 
     verbosityPrint('Writing extra Alya mesh files...')
     if generateCohesiveElements:
@@ -139,67 +130,8 @@ def runMesher(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevel
     t3 = time.time()
 
     if VERBOSITY == 1:
-        print('Mesh generation time:', round(t2-t1,2), 'seconds')
-        print('Mesh conversion time:', round(t3-t2,2), 'seconds')
-        print('Total execution time:', round(t3-t1,2), 'seconds')
-        
+        print('Mesh generation time:', round(t2 - t1, 2), 'seconds')
+        print('Mesh conversion time:', round(t3 - t2, 2), 'seconds')
+        print('Total execution time:', round(t3 - t1, 2), 'seconds')
+
     return
-
-if __name__ == '__main__':
-    
-    #-------------------------------------------------------------------
-    # User inputs
-    #-------------------------------------------------------------------
-
-    #case = 'RVE_10_10_1'
-    #h = 0.001
-    #c = 0.01
-    #nOfLevels = 10
-    #generateCohesiveElements = False
-
-    #case = 'RVE_Test_1'
-    #h = 0.001
-    #c = 0.01
-    #nOfLevels = 10
-    #generateCohesiveElements = False
-
-    # case = 'twoFibres'
-    # h = 0.25
-    # c = 1
-    # nOfLevels = 2
-    # generateCohesiveElements = True
-
-    #case = 'oneFibre'
-    #h = 0.25
-    #c = 1
-    #nOfLevels = 2
-    #generateCohesiveElements = False
-
-    case = 'RVE_1x1_with_voids_1'
-    h = 0.0005   # in-plane size
-    c = 0.028   # out-plane thickness
-    nOfLevels = 10
-    generateCohesiveElements = True
-
-    #-------------------------------------------------------------------
-    
-    # Set paths for directories  
-    basePath = f'{path}/../..'
-    dataPath = f'{basePath}/RVE_gen/data'
-    outputPath = f'{basePath}/output/'+case+'/msh/'
-    if os.path.exists(outputPath):
-        shutil.rmtree(f'{basePath}/output/'+case+'/msh/')
-    os.makedirs(outputPath)
-
-    # Set paths for binaries
-    gmshBinFile = 'gmsh'
-    #gmshBinFile = '/gpfs/projects/bsce81/gmsh/gmsh-4.11.1-Linux64/bin/gmsh'
-
-    # Set paths for binaries
-    gmsh2alya = 'gmsh2alya.pl'
-    #gmsh2alya = '/gpfs/projects/bsce81/alya/builds/gmsh2alya.pl'
-    
-    # Run mesher
-    runMesher(case, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements)
-
-
