@@ -48,8 +48,10 @@ def run(file, meshPath, outputPath, iload, debug):
 
     dim = 3
     writeAlyaDom(f'{outputPath}{file}{dash_iload}.dom.dat', file, dim, nOfMaterials, kfl_coh)
-    
-    writeAlyaSld(f'{outputPath}{file}{dash_iload}.sld.dat', file, dash_iload, 'STATIC', kfl_coh, nOfMaterials, iload, debug)
+    lx = 1.0
+    ly = 1.0
+    lz = 1.0
+    writeAlyaSld(f'{outputPath}{file}{dash_iload}.sld.dat', file, dash_iload, 'STATIC', kfl_coh, nOfMaterials, iload, lx, ly, lz, debug)
     
 if __name__ == '__main__':
 
