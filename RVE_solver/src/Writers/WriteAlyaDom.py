@@ -11,7 +11,10 @@ def writeAlyaDom(file, filename, ndime, nmate, generateCohesiveElements):
     #stream.write('  BOUNDARIES        = %d\n' % nboun)
     stream.write('  INCLUDE ../msh/%s.dims.dat\n' % filename)
     stream.write('  SPACE_DIMENSIONS  = %d\n' % ndime)
-    stream.write('  TYPES_OF_ELEMENTS = HEX08\n')
+    if ndime == 2:
+        stream.write('  TYPES_OF_ELEMENTS = QUA04\n')
+    elif ndime == 3:
+        stream.write('  TYPES_OF_ELEMENTS = HEX08\n')
     stream.write('  MATERIALS         = %d\n' % nmate)
     stream.write('  FIELDS            = 1\n')
     stream.write('    FIELD= 1, DIMENSIONS= %d, ELEMENTS\n' % (ndime*ndime))
