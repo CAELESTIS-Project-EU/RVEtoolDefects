@@ -3,10 +3,8 @@
 ## Overview
 This module generates the inputs required to use Alya Multiphysics computational mechanics solver. However, you are welcome to integrate any other computational solver.
 
-```
-
 ## Boundary codes
-
+```
           2-d                  3-d             
 
           4   
@@ -35,12 +33,12 @@ CODE 4: TOP,   Y= 1
 
 CODE 5: BACK,  Z= 0 (only for 3-d)
 CODE 6: FRONT, Z= 1 (only for 3-d)
-
+```
 
 ## Periodic Boundary Conditions (PBCs)
 
 The periodic boundary conditions are based on [Garoz et al. 2018](https://doi.org/10.1016/j.compositesb.2018.12.023). For microscale models the PBCs are applied at all faces. 
-
+```
           2-d                  3-d             
 
    D             C         D            C
@@ -79,23 +77,6 @@ The periodic boundary conditions are based on [Garoz et al. 2018](https://doi.or
    EFGH  ABCD      BC    AD         G     A
                    EH    AD        
                    FG    AD
-
-
-Permeability
-
-     Faces           Edges          Vertices
-  ------------------------------------------------ 
-  Slave Master    Slave Master    Slave Master
-   BCGF  ADHE      EF    AB         B     A
-                   DC    AB         D     A
-                   HG    DC         E     A  
-                   BF    AE         C     A
-                                    H     A
-                   CG    DH         F     A
-   EFGH  ABCD      BC    AD         G     A
-                   EH    AD        
-                   FG    AD
-
 ```
 
 ## References
