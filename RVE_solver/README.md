@@ -3,6 +3,8 @@
 ## Overview
 This module generates the inputs required to use Alya Multiphysics computational mechanics solver. However, you are welcome to integrate any other computational solver.
 
+```
+
 ## Boundary codes
 
           2-d                  3-d             
@@ -58,12 +60,12 @@ The periodic boundary conditions are based on [Garoz et al. 2018](https://doi.or
     \
     _\/ z
 
-     Edges          Vertices\n')
-  ------------------------------------------------\n')
-  Slave Master    Slave Master\n')
-    DC    AB         B     A\n')
-    BC    AD         C     A\n')
-                     D     A\n')
+     Edges          Vertices
+  ------------------------------------------------
+  Slave Master    Slave Master
+    DC    AB         B     A
+    BC    AD         C     A
+                     D     A
                      
      Faces           Edges          Vertices
   ------------------------------------------------ 
@@ -77,6 +79,24 @@ The periodic boundary conditions are based on [Garoz et al. 2018](https://doi.or
    EFGH  ABCD      BC    AD         G     A
                    EH    AD        
                    FG    AD
+
+
+Permeability
+
+     Faces           Edges          Vertices
+  ------------------------------------------------ 
+  Slave Master    Slave Master    Slave Master
+   BCGF  ADHE      EF    AB         B     A
+                   DC    AB         D     A
+                   HG    DC         E     A  
+                   BF    AE         C     A
+                                    H     A
+                   CG    DH         F     A
+   EFGH  ABCD      BC    AD         G     A
+                   EH    AD        
+                   FG    AD
+
+```
 
 ## References
 
