@@ -191,7 +191,7 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     
     stream.close()
     
-def writeAlyaSld3D(file, filename, dash_iload, ndime, kfl_timei, kfl_coh, nmate, iload, lx, ly, lz, debug):
+def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload, lx, ly, lz, debug):
     """ Alya caseName.sld.dat file
     """
     
