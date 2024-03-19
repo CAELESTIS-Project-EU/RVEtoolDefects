@@ -72,7 +72,7 @@ if __name__ == '__main__':
     #case = 'twoFibres'
     #case = 'oneFibre'
     case = 'RVE_1x1_with_voids_1'
-    listloads = ['11', '22', '12']
+    listloads = ['11', '22', '12', '23']
 
     #-------------------------------------------------------------------
 
