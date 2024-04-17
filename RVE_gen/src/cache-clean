@@ -1,0 +1,2 @@
+rm -rf ./Scripts/__pycache__
+rm -rf ./Scripts/RVE_generator/__pycache__
