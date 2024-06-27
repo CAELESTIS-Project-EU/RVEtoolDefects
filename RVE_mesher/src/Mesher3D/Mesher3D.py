@@ -2,20 +2,20 @@ import shutil
 
 import time
 
-from GmshMesher.GmshMesher import gmshMesher
+from RVE_mesher.src.GmshMesher.GmshMesher import gmshMesher
 
-from Readers.GmshReader import readMesh
-from Readers.BoundaryConditionReader import readBoundaryCondition
+from RVE_mesher.src.Readers.GmshReader import readMesh
+from RVE_mesher.src.Readers.BoundaryConditionReader import readBoundaryCondition
 
-from Writers.GmshWriter import writeMesh
-from Writers.Gmsh3dWriter import gmsh3DWriter
-from Writers.WriteAlyaElementType import writeElementType
-from Writers.WriteAlyaElementLocalDirections import writeElementLocalDirections
-from Writers.WriteAlyaBoundaryCondition import writeBoundaryCondition
-from Writers.WriteAlyaPeriodicConditions import writePeriodicConditions
-from Writers.WriteAlyaSet import writeAlyaSet
+from RVE_mesher.src.Writers.GmshWriter import writeMesh
+from RVE_mesher.src.Writers.Gmsh3dWriter import gmsh3DWriter
+from RVE_mesher.src.Writers.WriteAlyaElementType import writeElementType
+from RVE_mesher.src.Writers.WriteAlyaElementLocalDirections import writeElementLocalDirections
+from RVE_mesher.src.Writers.WriteAlyaBoundaryCondition import writeBoundaryCondition
+from RVE_mesher.src.Writers.WriteAlyaPeriodicConditions import writePeriodicConditions
+from RVE_mesher.src.Writers.WriteAlyaSet import writeAlyaSet
 
-from MeshOperations import \
+from RVE_mesher.src.MeshOperations import \
     RemoveOuterElements, \
     DetectMaterials, \
     DetectInterfaces, \
@@ -24,7 +24,7 @@ from MeshOperations import \
     PeriodicBoundaryConditions, \
     ObtainBoundaryFaces
 
-from Extrusion import \
+from RVE_mesher.src.Extrusion import \
     ExtrudeMesh, \
     ExtrudeBoundaries, \
     ExtrudePeriodicBoundaryCondition
@@ -41,20 +41,21 @@ else:
     def verbosityPrint(str):
         pass
 
-def mesher3D(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevels, generateCohesiveElements):
+def mesher3D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, c, nOfLevels, generateCohesiveElements):
+    
     # Get the start time
     t1 = time.time()
 
-    RVE = numpy.load(f'{dataPath}/{file}.npz')
+    RVE = numpy.load(os.path.join(gen_output, caseName+'.npz')) 
 
-    scriptFile = f'{outputPath}/{file}.geo'
-    mshFile = f'{outputPath}/{file}.msh'
+    scriptFile = os.path.join(mesh_output, caseName+'.geo')
+    mshFile = os.path.join(mesh_output, caseName+'.msh')
 
     verbosityPrint('Creating gmsh script...')
     gmshMesher(RVE, h, scriptFile, mshFile)
 
     verbosityPrint('Running gmsh...')
-    os.system(f'{gmshBinFile} {scriptFile} -v 0 -')
+    os.system(f'{gmshBinFile} {scriptFile} -o {mshFile} -v 0 -2')
 
     verbosityPrint('Reading mesh file...')
     x_id, T_ei, T_fi = readMesh(mshFile)
@@ -98,32 +99,30 @@ def mesher3D(file, gmshBinFile, gmsh2alya, dataPath, outputPath, h, c, nOfLevels
                                                                         nOfNodes2d, nOfLevels)
 
     verbosityPrint('Writing 2d mesh (gmsh)...')
-    writeMesh(f'{outputPath}/{file}_2d.msh', x_id, T_ei, T_fi)
+    writeMesh(f'{os.path.join(mesh_output, caseName)}_2d.msh', x_id, T_ei, T_fi)
 
     verbosityPrint('Writing 3d mesh (gmsh)...')
-    gmsh3DWriter(f'{outputPath}/{file}_3d.msh', x3d_id, T3d_ei, T3d_fi)
-
-    # oneFibre_3d --bulk "1,2,3,4" --bcs=boundaries
+    gmsh3DWriter(f'{os.path.join(mesh_output, caseName)}_3d.msh', x3d_id, T3d_ei, T3d_fi)
 
     t2 = time.time()
 
     verbosityPrint('Converting mesh to Alya format...')
-    os.system(f'{gmsh2alya} {outputPath}/{file}_3d --bulkcodes --bcs=boundaries --out {outputPath}{file}')
+    os.system(f'{gmsh2alya} {os.path.join(mesh_output, caseName)}_3d --bulkcodes --bcs=boundaries --out {os.path.join(mesh_output, caseName)}')
 
     nOf3dElements = T3d_ei.shape[0]
 
     verbosityPrint('Writing extra Alya mesh files...')
     if generateCohesiveElements:
-        writeElementType(f'{outputPath}{file}.cha.dat', type_e, nOfLevels)
+        writeElementType(f'{os.path.join(mesh_output, caseName)}.cha.dat', type_e, nOfLevels)
 
-    writeElementLocalDirections(f'{outputPath}{file}.fie.dat', nOf3dElements)
+    writeElementLocalDirections(f'{os.path.join(mesh_output, caseName)}.fie.dat', nOf3dElements)
 
-    bcs_f = readBoundaryCondition(f'{outputPath}{file}.fix.bou')
-    writeBoundaryCondition(f'{outputPath}{file}.fix.bou', bcs_f)
+    bcs_f = readBoundaryCondition(f'{os.path.join(mesh_output, caseName)}.fix.bou')
+    writeBoundaryCondition(f'{os.path.join(mesh_output, caseName)}.fix.bou', bcs_f)
 
-    writePeriodicConditions(f'{outputPath}{file}.per.dat', pbcs_i)
+    writePeriodicConditions(f'{os.path.join(mesh_output, caseName)}.per.dat', pbcs_i)
 
-    writeAlyaSet(f'{outputPath}{file}.set.dat', nOf3dElements)
+    writeAlyaSet(f'{os.path.join(mesh_output, caseName)}.set.dat', nOf3dElements)
 
     verbosityPrint('Done!')
 

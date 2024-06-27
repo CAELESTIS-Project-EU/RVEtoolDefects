@@ -1,10 +1,10 @@
-#Import libraries
+# Import libraries
 from __future__ import division, print_function, absolute_import
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Ellipse, Rectangle
 from matplotlib.collections import PatchCollection
-#Import local libraries
+# Import local libraries
 
 __all__ = ['circles', 'ellipses', 'rectangles']
 

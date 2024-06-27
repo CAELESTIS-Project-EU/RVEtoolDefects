@@ -10,8 +10,6 @@ from numba.typed import Dict
 
 OutputCaseName ='RVE_5_5_Vvoid0_00'    #Output name of the case. A disbtribution number will be included automatically.
 
-NumTimes       = 1         #Number of different fibre distributions to generate, in the case of a random packing
-
 R_fibre        = 0.0070           # Fibre average radius [mm]
 R_fibre_STDEV  = 0.0003           # Standard deviation for fibres. Must be in the same units of fibre radius [mm]
 
@@ -19,7 +17,7 @@ R_void         = 0.0035           # Void average radius [mm]
 R_void_STDEV   = 0.0005           # Standard deviation for voids. Must be in the same units of void radius [mm]
 
 Vol_fibre      = 0.55             # Overall fibre volume we wish to obtain
-Vol_voids      = 0.00             # Overall void volume we wish to obtain
+Vol_voids      = 0.05             # Overall void volume we wish to obtain
 
 delta_width    = 5               # Ratio (Total RVE width/2*Fibre radius)
 delta_height   = 5               # Ratio (Total RVE height/2*Fibre radius)

@@ -1,14 +1,14 @@
-from Readers.GmshReader import readMesh
-from Writers.GmshWriter import writeMesh
+from RVE_mesher.src.Readers.GmshReader import readMesh
+from RVE_mesher.src.Writers.GmshWriter import writeMesh
 
 import numpy
 
 def detectMaterials(fibres, x_id, T_ei):
 
-    # minMaterialId = T_ei[:,-1].min()
-    # maxMaterialId = T_ei[:,-1].max()
+    #minMaterialId = T_ei[:,-1].min()
+    #maxMaterialId = T_ei[:,-1].max()
     #
-    # # print(minMaterialId, maxMaterialId)
+    #print(minMaterialId, maxMaterialId)
     #
     # materialMap = numpy.zeros(maxMaterialId+1, dtype='int')
 
@@ -19,7 +19,7 @@ def detectMaterials(fibres, x_id, T_ei):
     for e in range(nOfElements):
 
         material = 0
-
+        
         c_d = (x_id[T_ei[e, :-1], :]).sum(0) / 4.0
 
         for fibre in range(nOfFibres):
@@ -32,7 +32,7 @@ def detectMaterials(fibres, x_id, T_ei):
             if signedD < 0.0:
                 material = fibres[fibre, 4]+1
                 break
-
+        
         T_ei[e,-1] = material
 
 

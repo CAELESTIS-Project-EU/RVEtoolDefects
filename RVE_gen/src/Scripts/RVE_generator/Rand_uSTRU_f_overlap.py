@@ -1,7 +1,7 @@
 # Import libraries
 import numpy as num
 from numba import jit
-#Import local libraries
+# Import local libraries
 
 
 @jit(cache=True, nopython=True)

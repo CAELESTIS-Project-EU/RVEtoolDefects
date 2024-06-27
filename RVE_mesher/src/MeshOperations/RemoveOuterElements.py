@@ -1,5 +1,5 @@
-from Readers.GmshReader import readMesh
-from Writers.GmshWriter import writeMesh
+from RVE_mesher.src.Readers.GmshReader import readMesh
+from RVE_mesher.src.Writers.GmshWriter import writeMesh
 
 import numpy
 

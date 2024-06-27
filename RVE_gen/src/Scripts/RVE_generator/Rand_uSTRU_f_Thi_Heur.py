@@ -30,12 +30,10 @@ AMADE research group, University of Girona (UdG), Girona, Catalonia, Spain
 
 """
 
-#Import libraries:
+# Import libraries:
 import numpy as num
 from numba import jit
-#import time
-#time.process_time()
-#import sys
+
 
 @jit(cache=True, nopython=True)
 def Rand_Per_uSTRU_ThirdHeur(N_fibre,Fibre_pos,a,b,Vol_fibre,Vol_fibre_1,Vol_fibre_2,A_total,A_1_fibre,A_2_fibre,Vec_mem,N_fibre_real,S_base):
