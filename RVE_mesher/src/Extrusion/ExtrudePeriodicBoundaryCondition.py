@@ -1,7 +1,7 @@
-from Readers.GmshReader import readMesh
+from RVE_mesher.src.Readers.GmshReader import readMesh
 
-from MeshOperations import PeriodicBoundaryConditions
-from Extrusion.ExtrudeMesh import extrudeMesh
+from RVE_mesher.src.MeshOperations import PeriodicBoundaryConditions
+from RVE_mesher.src.Extrusion.ExtrudeMesh import extrudeMesh
 
 import numpy
 

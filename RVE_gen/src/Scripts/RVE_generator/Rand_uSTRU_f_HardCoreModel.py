@@ -2,12 +2,12 @@
 import numpy as num
 from numba import jit
 # Import local libraries
-from .Rand_uSTRU_f_overlap import f_overlap
-from .Rand_uSTRU_f_overlap import f_boundary
-from .Rand_uSTRU_f_overlap import f_close_to_boundary
-from .Rand_uSTRU_f_overlap import f_area_voids_overlap
-from .Rand_uSTRU_f_FirstHeur import Rand_Per_uSTRU_FirstHeur
-from .Rand_uSTRU_f_SecHeur import Rand_Per_uSTRU_SecHeur
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_overlap
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_boundary
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_close_to_boundary
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_area_voids_overlap
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_FirstHeur import Rand_Per_uSTRU_FirstHeur
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_SecHeur import Rand_Per_uSTRU_SecHeur
 
 
 @jit(cache=True, nopython=True)
@@ -233,6 +233,8 @@ def Rand_PER_uSTRU_GEN_3D_LayerBundle(IDlayerVectFt1, IDlayerVectFt0, MatRichReg
         Ft1IndexCols = (num.where(Stacking_sequence[:] == 0)[
             0]) + 1  # These are x and y indices of the layers of fibre type 2. This indices may be used to enter into the vectors Xmin, Xmax, Ymin, Ymax to konw the coordinates of the layers
         Ft2IndexCols = (num.where(Stacking_sequence[:] == 1)[0]) + 1
+
+    BundZoneFtEnd = num.zeros((NbundlesRa, NbundlesRa), dtype=num.int64)    # BSC
 
     if Hybrid_type == 2:  # Regions for an intralayer hybrid (bundle-by-bundle)
         if CreateLargerRatio == 0:
@@ -660,11 +662,9 @@ def Rand_PER_uSTRU_GEN_3D_LayerBundle(IDlayerVectFt1, IDlayerVectFt0, MatRichReg
         
         # First Heuristic - Move Fibres Around to Gain More Empty Areas
         N_fibre, Fibre_pos, Vec_mem = Rand_Per_uSTRU_FirstHeur(N_fibre, Fibre_pos, a, b, DISTMIN, cluster_fibres, N_cycles, Vec_mem, N_change, First_Heur_op)
-        print('BSC: len(Fibre_pos)',len(Fibre_pos))
         
         # Second Heuristic - Compact the fibres on the outskirts of the RVE
         Square_size,N_fibre,Fibre_pos,Vec_mem = Rand_Per_uSTRU_SecHeur(IDlayerVect,Hybrid_type,Xmax,Xmin,Ymax,Ymin,Square_size,Square_inc,a,b,R,N_fibre,Fibre_pos,DISTMIN, cluster_fibres, Vec_mem,NbundlesRa,BundZoneFtEnd,Sec_heur_inter_intra,Vol_fibre_1,Vol_fibre_2,Fibre_type_1,Vol_fibre)
-        print('BSC: len(Fibre_pos)',len(Fibre_pos))
         
         # Third Heuristic - Works only for fibres at vertices and outskirts --> discarded, it may be interesting for FEM analyses
         # Vol_fibre,Vol_fibre_1,Vol_fibre_2,Fibre_pos,Vec_mem,N_fibre,N_fibre_real = Rand_Per_uSTRU_ThirdHeur(N_fibre,Fibre_pos,a,b,Vol_fibre,Vol_fibre_1,Vol_fibre_2,A_total,A_fib[0],A_fib[1],Vec_mem,N_fibre_real,S_base)
@@ -676,19 +676,16 @@ def Rand_PER_uSTRU_GEN_3D_LayerBundle(IDlayerVectFt1, IDlayerVectFt0, MatRichReg
         if ((CountersQuart != 4) and (CountersQuart != 0)) or (CountersHalf % 2 != 0):  
             # If there is an incorrect number of these splitted fibres, then a bug occurred
             print(' ')
-            if (CountersQuart != 4) and (CountersQuart != 0):
-                print('Inconsistent number of total fibres splitted into 4 ')
-            elif CountersHalf % 2 != 0:
-                print('Inconsistent number of total fibres splitted into 2 ')
+            if (CountersQuart != 4) and (CountersQuart != 0):                   # BSC   
+                print('Inconsistent number of total fibres splitted into 4 ')   # BSC
+            elif CountersHalf % 2 != 0:                                         # BSC
+                print('Inconsistent number of total fibres splitted into 2 ')   # BSC
                 
             print('Bug occurred. Deletting boundary fibres to avoid the bug.')
             # A bug has occurred which has deleted a fibre incorrectly.
             # As a workaround, we delete the boundary fibres, and update all variables accordingly:
-            print(Fibre_pos[:,3])
             FullFibres = (num.where(Fibre_pos[:, 3] == 0)[0]) + 1  # Fibres without splitting
-      
             Fibre_pos = Fibre_pos[FullFibres[:] - 1, :]
-            print('--jorge4',len(FullFibres),len(Fibre_pos))
             Vec_mem = Vec_mem[FullFibres[:] - 1, :]
             N_fibre -= (CountersQuart + CountersHalf)
             N_fibre_real = N_fibre

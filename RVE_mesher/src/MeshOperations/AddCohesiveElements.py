@@ -1,6 +1,6 @@
-from MeshOperations import DetectMaterials, GlobalMeshFaces
+from RVE_mesher.src.MeshOperations import DetectMaterials, GlobalMeshFaces
 
-from Readers.GmshReader import readMesh
+from RVE_mesher.src.Readers.GmshReader import readMesh
 
 import numpy
 

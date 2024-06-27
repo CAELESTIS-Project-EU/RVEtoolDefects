@@ -1,8 +1,8 @@
 #Import libraries
 from collections import OrderedDict
 #Import local libraries
-from Scripts.Misc import str_is_numeric
-from Scripts.Misc import Field
+from RVE_gen.src.Scripts.Misc import str_is_numeric
+from RVE_gen.src.Scripts.Misc import Field
 from MaterialDataBase.Material_data_base import Material
 
 

@@ -1,9 +1,9 @@
-#Import libraries
+# Import libraries
 import numpy as num
 from numba import jit
-#Import local libraries
-from .Rand_uSTRU_f_overlap import f_overlap, f_overlap_min
-from .Rand_uSTRU_f_overlap import f_boundary, f_close_to_boundary
+# Import local libraries
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_overlap, f_overlap_min
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_boundary, f_close_to_boundary
 
 @jit(cache=True, nopython=True)
 def Rand_Per_uSTRU_SecHeur(IDlayerVect,Hybrid_type,Xmax,Xmin,Ymax,Ymin,Square_size,Square_inc,a,b,R,N_fibre,Fibre_pos,DISTMIN, cluster_fibres, Vec_mem,NbundlesRa,BundZoneFtEnd,Sec_heur_inter_intra,Vol_fibre_1,Vol_fibre_2,Fibre_type_1,Vol_fibre):
@@ -116,7 +116,7 @@ def Rand_Per_uSTRU_SecHeur(IDlayerVect,Hybrid_type,Xmax,Xmin,Ymax,Ymin,Square_si
         File "Rand_uSTRU_f_overlap.py": f_overlap(...) and f_overlap_min(...) functions
     '''
 
-    print('2n Heuristic')
+    print('2nd Heuristic')
     
     fibre_jump = 0 #Threshold to jump in the loop, if a quarter of fibre was previously treated
     if Sec_heur_inter_intra==1: #If this option is used, then check if the required volume of a fibre population was reached
@@ -239,6 +239,12 @@ def Rand_Per_uSTRU_SecHeur(IDlayerVect,Hybrid_type,Xmax,Xmin,Ymax,Ymin,Square_si
             PiList=num.arange(-num.pi/2,(0.0)+(num.pi/90),num.pi/90)
             PiList[-1]= 0
             SqRegion=8
+        else:  # BSC - # Fiber is inside the square stirring done? study next fibre
+            # PiList = num.arange(-num.pi/2,(0.0)+(num.pi/90),num.pi/90)
+            # PiList = num.arange(0,361,1)*num.pi/180
+            # continue
+            break
+            print('Warning: Rand_uSTRU_f_SecHeur in checking fibre position with the square! PiList not declared')
         
         MIN = a*2 #Initiate a minimum distance
         THETA_MIN = 100 #Angle to stir the fibre
@@ -285,7 +291,6 @@ def Rand_Per_uSTRU_SecHeur(IDlayerVect,Hybrid_type,Xmax,Xmin,Ymax,Ymin,Square_si
                     IndexFibre=num.concatenate((num.arange(0,i+ics),num.arange(i+ics,Fibre_pos.shape[0])))
                     #indexMem=num.concatenate((num.arange(0,i+ics-1),num.arange(i+ics,Vec_mem.shape[0])))
                     Fibre_pos=Fibre_pos[IndexFibre,:]
-                    print('--Jorge1',len(Fibre_pos))
                     #Vec_mem=Vec_mem[indexMem,:]
                     Vec_mem=Vec_mem[IndexFibre,:]
                 elif Fibre_pos [i-1,4-1] == 4: #If the fibre was a quarter, then delete the remaining three parts
@@ -298,7 +303,6 @@ def Rand_Per_uSTRU_SecHeur(IDlayerVect,Hybrid_type,Xmax,Xmin,Ymax,Ymin,Square_si
                         Index=num.concatenate((num.arange(0,Del[0]),num.arange(Del[0],Fibre_pos.shape[0])))
                         #indexMem=num.concatenate((num.arange(0,Del[0]),num.arange(Del[0]+1,Vec_mem.shape[0])))
                         Fibre_pos=Fibre_pos[Index,:]
-                        print('--Jorge2',len(Fibre_pos))
                         #Vec_mem=Vec_mem[indexMem,:]
                         Vec_mem=Vec_mem[Index,:]
                     
@@ -348,7 +352,6 @@ def Rand_Per_uSTRU_SecHeur(IDlayerVect,Hybrid_type,Xmax,Xmin,Ymax,Ymin,Square_si
                             #indexMem=num.concatenate((num.arange(0,FibDel),num.arange(FibDel+1,Vec_mem.shape[0])))
                             
                             Fibre_pos=Fibre_pos[Index,:]
-                            print('--Jorge3',len(Fibre_pos))
                             #Vec_mem=Vec_mem[indexMem,:]
                             Vec_mem=Vec_mem[Index,:]
                         

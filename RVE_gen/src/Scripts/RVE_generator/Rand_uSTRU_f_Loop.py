@@ -1,17 +1,18 @@
-#Import libraries
+# Import libraries
 import numpy as num
 import matplotlib
 import matplotlib.pyplot as plt
 import time
-#Import local libraries
-from .Rand_uSTRU_f_ExtendDom import ExtendDomain, AdjustArea
-from .Rand_uSTRU_f_HardCoreModel import Rand_PER_uSTRU_GEN_3D_LayerBundle
-from .Rand_uSTRU_f_overlap import f_area_voids_overlap
-from .Rand_uSTRU_f_Plot_Fibres import circles
-from .Rand_uSTRU_f_CheckVfAlongRVE import CheckVfAlongRVE,PlotVfAlongRVE
+import os
+# Import local libraries
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_ExtendDom import ExtendDomain, AdjustArea
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_HardCoreModel import Rand_PER_uSTRU_GEN_3D_LayerBundle
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_area_voids_overlap
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_Plot_Fibres import circles
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_CheckVfAlongRVE import CheckVfAlongRVE,PlotVfAlongRVE
 
 
-def RandGen(SimNumb, Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Error_V_voids, DISTMIN, cluster_fibres, N_guesses_max,N_cycles_max,
+def RandGen(    Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Error_V_voids, DISTMIN, cluster_fibres, N_guesses_max,N_cycles_max,
                 N_change, Square_size, Square_inc, inter_option, a, b, S_base, Fibre_type_1, R1,
                 CreateLargerRatio, MultipleSizeWidth, MultipleSizeheight, NbundlesRa,
                 MatRichRegionX,MatRichRegionY,WidthMatRich,HeightMatRich,
@@ -30,8 +31,6 @@ def RandGen(SimNumb, Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Err
 
     Args
     -----
-    SimNumb : float
-            Current distribution number
     Hybrid_type : integer
             Determines the hybrid type to generate (intrayarn, interlayer or intralayer)
     Max_fibres : integer
@@ -194,8 +193,6 @@ def RandGen(SimNumb, Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Err
     while status == 0: # If status=1, the RVE complies with the volumes requested, and hence, here it stops. Otherwise, a new distribution starts all over again.
         Fibre_pos=num.zeros((Max_fibres,6), dtype=num.float32) #Fibre position matrix. This is a Matrix of coordinates:
         
-        print('BSC: Abans de Rand_PER_uSTRU',len(Fibre_pos))
-        
         # 1st Column = fibre ID
         # 2nd Column = X-coordinate of centre
         # 3rd Column = Y-coordinate of centre
@@ -208,8 +205,6 @@ def RandGen(SimNumb, Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Err
         status,N_fibre,Fibre_pos,A_total,a,b = Rand_PER_uSTRU_GEN_3D_LayerBundle(IDlayerVectFt1,IDlayerVectFt0,MatRichRegionX,MatRichRegionY,WidthMatRich,HeightMatRich,CreateLargerRatio, Vol_fibre_req,Fibre_type_1, Error_V_fibres, Error_V_voids,
                                                                                  NbundlesRa, Hybrid_type,Fibre_pos, R, DISTMIN, cluster_fibres, Max_fibres, N_guesses_max, N_cycles_max, N_change, Square_size, Square_inc, inter_option, a, b, S_base, R1, FirstFibreTypeRa,VariableFibreRadius,
                                                                                  R_STDEV,R1_STDEV,Stacking_sequence,Stacking_sequence_thickness, First_row_types_ft0,Next_row_types_ft0,First_row_types_ft1,Next_row_types_ft1,Sec_heur_inter_intra)
-        print('BSC: Despres de RAnd_Per_uSTRU',len(Fibre_pos))
-
 
     ###########################################################################
     # Output all data and finish                                              #
@@ -218,12 +213,13 @@ def RandGen(SimNumb, Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Err
     # Update RVE information:
     delta_width=a/R
     delta_height=b/R
-    #Vec_del=num.arange(N_fibre,Max_fibres, dtype=num.int32)      # Fibres to delete (since were not generated)
-    Vec_del=num.arange(N_fibre,len(Fibre_pos), dtype=num.int32)   # Fibres to delete (since were not generated)
+   #Vec_del=num.arange(N_fibre,Max_fibres+1, dtype=num.float32)   # Fibres to delete (since were not generated)
+   #Vec_del=num.arange(N_fibre,Max_fibres, dtype=num.int32)       # BSC Fibres to delete (since were not generated)
+    Vec_del=num.arange(N_fibre,len(Fibre_pos), dtype=num.int32)   # BSC Fibres to delete (since were not generated)
     Fibre_pos=num.delete(Fibre_pos,Vec_del,axis=0)                # Delete them
     Fibre_pos[:,0]=num.arange(1,N_fibre+1)                        # Correclty input the fibre indices
-
-    if kfl_plot:
+    
+    if kfl_plot:                                                  # BSC       
       # Update default matplotlib options with custom ones
       plt.ioff()
       plt.rcParams['xtick.labelsize'] = 40 #Set x tick size
@@ -267,7 +263,7 @@ def RandGen(SimNumb, Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Err
             plt.xlim(0, a)
             plt.xlabel('RVE width [mm]')
             plt.ylabel('RVE height [mm]')
-            plt.savefig(OutputCaseName+'_FibrePlotBefore_'+str(SimNumb)+'.pdf', bbox_inches='tight')
+            plt.savefig(OutputCaseName+'_FibrePlotBefore'+'.pdf', bbox_inches='tight')
             plt.close(fig)
 
         #Now multiply the domain:
@@ -348,7 +344,7 @@ def RandGen(SimNumb, Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Err
         plt.xlim(0, a)
         plt.xlabel('RVE width [mm]')
         plt.ylabel('RVE height [mm]')
-        plt.savefig(OutputCaseName+ '_' + str(SimNumb) + '_FibrePlot.pdf', bbox_inches='tight')
+        plt.savefig(OutputCaseName+ '_FibrePlot.pdf', bbox_inches='tight')
         plt.show()
         plt.close(fig)
 
@@ -358,18 +354,21 @@ def RandGen(SimNumb, Hybrid_type,Max_fibres,R,Vol_fibre_req, Error_V_fibres, Err
         Xmean=num.zeros((NSquaresX, NSquaresY), dtype=num.float32)
         Ymean=num.zeros((NSquaresX, NSquaresY), dtype=num.float32)
         Vol_f = CheckVfAlongRVE(NSquaresY, NSquaresX, a, b, Fibre_pos, R, R1, Vol_f, Xmean, Ymean)
-        PlotVfAlongRVE(Vol_f, NSquaresY, Xmean, Ymean, SimNumb)
+        PlotVfAlongRVE(Vol_f, NSquaresY, Xmean, Ymean)
 
     # Export a file with all data to be input in the Progressive Failure Model or other
-    num.savez_compressed(OutputCaseName+'_'+str(SimNumb), Fibre_pos=Fibre_pos, R=R, R1=R1, DISTMIN=DISTMIN, SimNumb=SimNumb,
+    num.savez_compressed(OutputCaseName, Fibre_pos=Fibre_pos, R=R, R1=R1, DISTMIN=DISTMIN, SimNumb=1,
                          delta_width=delta_width,delta_height=delta_height,Fibre_type_1=Fibre_type_1,A_total=A_total,a=a,b=b,
                          Hybrid_type=Hybrid_type, R_STDEV=R_STDEV, R1_STDEV=R1_STDEV)
 
     print("--- %s minutes ---" % (time.process_time()/60))
 
-    input = open(str(OutputCaseName + '_summary.txt'))
+    caseName = os.path.split(os.path.split(OutputCaseName)[0])[-1] #  BSC
+#     input = open(os.path.join(OutputCaseName,caseName+'_summary.txt')) # BSC
+    input = open(str(OutputCaseName + '_summary.txt')) # BSC
     data = input.read()
-    Summary_file = str(OutputCaseName + '_' + str(SimNumb) + '_summary.txt')
+    Summary_file = str(OutputCaseName +'_summary.txt')
+#     Summary_file = os.path.join(OutputCaseName,caseName+ '_' + str(SimNumb) +'_summary.txt') # BSC
     with open(Summary_file, 'a') as f:
         f.write(data)
         f.write('DESCRIPTION OF THE RVE ACHIEVED \n')

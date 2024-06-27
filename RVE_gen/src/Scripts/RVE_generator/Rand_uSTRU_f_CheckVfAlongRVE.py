@@ -1,8 +1,8 @@
-#Import libraries
+# Import libraries
 import numpy as num
 from numba import jit
 import matplotlib.pyplot as plt
-#Import local libraries
+# Import local libraries
 
 @jit(cache=True, nopython=True)
 def CheckVfAlongRVE(NSquaresY, NSquaresX, a, b, Fibre_pos, R, R1, Vol_f, Xmean, Ymean):
@@ -92,7 +92,7 @@ def CheckVfAlongRVE(NSquaresY, NSquaresX, a, b, Fibre_pos, R, R1, Vol_f, Xmean, 
             
     return(Vol_f)
     
-def PlotVfAlongRVE(Vol_f,NSquaresY, Xmean, Ymean,SimNumb):
+def PlotVfAlongRVE(Vol_f,NSquaresY, Xmean, Ymean):
     '''
     Python function to plot the volume fraction in certain given windows along the RVE
     
@@ -112,8 +112,6 @@ def PlotVfAlongRVE(Vol_f,NSquaresY, Xmean, Ymean,SimNumb):
             Gives the X coordinate of each window
     Ymean : float32 numpy array of shape (NSquaresX,NSquaresY)
             Gives the Y coordinate of each window
-    SimNumb : integer
-            Current fibre distribution number
 
     Kwargs
     -----
@@ -157,5 +155,5 @@ def PlotVfAlongRVE(Vol_f,NSquaresY, Xmean, Ymean,SimNumb):
     plt.xlabel('X dimension', fontsize=30)
     plt.ylabel('Volume fraction', fontsize=30)
     plt.legend(loc='best', numpoints=1, ncol=1, fontsize=10)
-    plt.savefig('VolumeFractionVariation_'+str(SimNumb)+'.pdf', bbox_inches='tight')
+    plt.savefig('VolumeFractionVariation_'+'.pdf', bbox_inches='tight')
     plt.close(1)   

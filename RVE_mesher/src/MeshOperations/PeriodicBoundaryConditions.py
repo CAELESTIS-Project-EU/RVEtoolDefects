@@ -41,7 +41,9 @@ def leftRightBoundaryCondition(x_id, a, b, tol):
     nOfRightNodes = rightNodes_i.size
 
     if nOfLeftNodes != nOfRightNodes:
+        raise TypeError("Non-periodic left-right faces!")
         print(f'Error!! nOfLeftNodes: {nOfLeftNodes} != nOfRightNodes: {nOfRightNodes}')
+        exit()
 
     leftRightBoundaryCondition = numpy.empty((nOfLeftNodes, 2), dtype='int')
     leftRightBoundaryCondition[:,0] = leftNodes_i[leftPerm_i]
@@ -78,8 +80,10 @@ def frontBackBoundaryCondition(x_id, b, tol):
     nOfBackNodes = backNodes_i.size
 
     if nOfFrontNodes != nOfBackNodes:
+        raise TypeError("Non-periodic bottom-top faces!")
         print(f'Error!! nOfFrontNodes: {nOfFrontNodes} != nOfBackNodes: {nOfBackNodes}')
-
+        exit()
+    
     frontBackBoundaryCondition = numpy.empty((nOfFrontNodes, 2), dtype='int')
     frontBackBoundaryCondition[:,0] = frontNodes_i[frontPerm_i]
     frontBackBoundaryCondition[:,1] = backNodes_i[backPerm_i]

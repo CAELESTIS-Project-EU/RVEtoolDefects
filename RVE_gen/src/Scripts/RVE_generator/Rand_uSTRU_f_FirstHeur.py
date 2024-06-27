@@ -1,9 +1,9 @@
-#Import libraries
+# Import libraries
 import numpy as num
 from numba import jit
-#Import local libraries
-from .Rand_uSTRU_f_overlap import f_overlap
-from .Rand_uSTRU_f_overlap import f_boundary, f_close_to_boundary
+# Import local libraries
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_overlap
+from RVE_gen.src.Scripts.RVE_generator.Rand_uSTRU_f_overlap import f_boundary, f_close_to_boundary
 
 #With this criteria we want to move the fibres closer between them to gain more empty areas to fill them with more fibres
 @jit(cache=True, nopython=True)
@@ -175,9 +175,6 @@ def Rand_Per_uSTRU_FirstHeur(N_fibre, Fibre_pos, a, b, DISTMIN, cluster_fibres, 
                         IndexFibre=num.concatenate((num.arange(0,i+ics),num.arange(i+ics,Fibre_pos.shape[0])))
                         #indexMem=num.concatenate((num.arange(0,i+ics-1),num.arange(i+ics,Vec_mem.shape[0])))
                         Fibre_pos=Fibre_pos[IndexFibre,:]
-                        print('lenIndexFibre',len(IndexFibre))
-                        print('IndexFibre:',IndexFibre)
-                        print('FirstEur-Jorge1', len(Fibre_pos))
                         #Vec_mem=Vec_mem[indexMem,:]
                         Vec_mem=Vec_mem[IndexFibre,:]
                     elif Fibre_pos[i-1,4-1] == 4: #If Fibre i was a quarter, then we need to delete the three remaining parts
@@ -187,10 +184,9 @@ def Rand_Per_uSTRU_FirstHeur(N_fibre, Fibre_pos, a, b, DISTMIN, cluster_fibres, 
                         for QuarID in range(1,4):
                             Del=(num.where(Fibre_pos[:,3] == 4)[0]) #Succesive 3 pairs to delete
                             #Index=num.concatenate((num.arange(0,Del[0]),num.arange(Del[0]+1,Fibre_pos.shape[0]))) 
-                            Index=num.concatenate((num.arange(0,Del[0]),num.arange(Del[0],Fibre_pos.shape[0]))) # BSC
+                            Index=num.concatenate((num.arange(0,Del[0]),num.arange(Del[0],Fibre_pos.shape[0])))     # BSC
                             #indexMem=num.concatenate((num.arange(0,Del[0]),num.arange(Del[0]+1,Vec_mem.shape[0])))
                             Fibre_pos=Fibre_pos[Index,:]
-                            print('FirstEur-Jorge2', len(Fibre_pos))
                             #Vec_mem=Vec_mem[indexMem,:]
                             Vec_mem=Vec_mem[Index,:]
                     continue
@@ -255,7 +251,6 @@ def Rand_Per_uSTRU_FirstHeur(N_fibre, Fibre_pos, a, b, DISTMIN, cluster_fibres, 
                                     Index=num.concatenate((num.arange(0,FibDel),num.arange(FibDel+1,Fibre_pos.shape[0])))
                                     #indexMem=num.concatenate((num.arange(0,FibDel),num.arange(FibDel+1,Vec_mem.shape[0])))
                                     Fibre_pos=Fibre_pos[Index,:]
-                                    print('FirstEur-Jorge3', len(Fibre_pos))
                                     #Vec_mem=Vec_mem[indexMem,:]
                                     Vec_mem=Vec_mem[Index,:]
                             

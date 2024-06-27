@@ -1,6 +1,10 @@
-def writeAlyaKer(file, iload, debug):
+def writeAlyaKer(file, iload, params_solver):
     """ Alya caseName.ker.dat file
     """
+    # Get inputs
+    debug = params_solver['debug']
+    tf    = params_solver['tf']
+    u     = params_solver['u']
     
     stream = open(file, 'w')
     
@@ -25,16 +29,16 @@ def writeAlyaKer(file, iload, debug):
     stream.write('        0.0  0.0 0.0 0.0\n')
     if iload == '11':
         # Longitudinal tension
-        stream.write(f'        {1.0:1.1f}  0.0 0.0 {1.0e-5:1.5e}\n')
+        stream.write(f'        {tf:1.2f}  0.0 0.0 {u:1.5e}\n')
     elif iload == '22':
         # Transverse tension
-        stream.write(f'        {1.0:1.1f}  0.0 {1.0e-5:1.5e} 0.0\n')
+        stream.write(f'        {tf:1.2f}  0.0 {u:1.5e} 0.0\n')
     elif iload == '12':
         # In-plane shear
-        stream.write(f'        {1.0:1.1f}  {1.0e-5:1.5e} 0.0 0.0\n')
+        stream.write(f'        {tf:1.2f}  {u:1.5e} 0.0 0.0\n')
     elif iload == '23':
         # Transverse shear
-        stream.write(f'        {1.0:1.1f}  0.0 0.0 {1.0e-5:1.5e}\n')
+        stream.write(f'        {tf:1.2f}  0.0 0.0 {u:1.5e}\n')
     stream.write('      END_SHAPE_DEFINITION\n')
     stream.write('    END_FUNCTIONS\n')
     stream.write('  END_DISCRETE_FUNCTIONS\n')
