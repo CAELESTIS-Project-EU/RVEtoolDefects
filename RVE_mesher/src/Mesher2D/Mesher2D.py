@@ -56,6 +56,43 @@ def joinPeriodicBoundaryConditions(e42_i, e31_i, v41_i, v42_i, v43_i):
     return pbc_i
 
 def mesher2D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, generateCohesiveElements):
+    """
+    Boundary conditions:
+
+     D            C               4
+      o----------o          o----------o
+      |          |          |          |
+      |          |          |          |
+      |          |        1 |          | 2
+      |          |          |          |
+      |          |          |          |
+      o----------o          o----------o
+     A            B               3
+
+       ^ y
+       |
+       |      x
+       o----->
+    
+       CODE 1: LEFT,  X= 0
+       CODE 2: RIGHT, X= lx
+       CODE 3: BOT,   Y= 0
+       CODE 4: TOP,   Y= ly
+    
+          Edges         Vertices
+       ------------------------------------------------
+       Slave Master    Slave Master
+        DC    AB         B     A
+        BC    AD         C     A
+                         D     A
+    
+     Materials:
+        CODE 1: MATRIX
+        CODE 2: FIBER
+        CODE 3: DAMAGED FIBER (OPTIONAL)
+         ...
+        CODE N: COHESIVE (OPTIONAL)
+    """
     
     # Get the start time
     t1 = time.time()

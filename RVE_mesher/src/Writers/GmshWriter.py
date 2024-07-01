@@ -54,9 +54,9 @@ def writeElements(stream, T_ei, T_fi):
     stream.write(f'{nOfEdges+nOfQuads}\n')
 
     for e in range(nOfEdges):
-        stream.write(f'{e+1} 1 2 {T_fi[e, -1]} {T_fi[e, -1]} {T_fi[e, 0] + 1} {T_fi[e, 1] + 1}\n')
+        stream.write(f'{e+1} 1 2 {T_fi[e, -1]+1} {T_fi[e, -1]+1} {T_fi[e, 0] + 1} {T_fi[e, 1] + 1}\n')
 
     for f in range(nOfQuads):
-        stream.write(f'{nOfEdges+f+1} 3 2 {T_ei[f, -1]} {T_ei[f, -1]} {T_ei[f, 0] + 1} {T_ei[f, 1] + 1} {T_ei[f, 2] + 1} {T_ei[f, 3] + 1}\n')
+        stream.write(f'{nOfEdges+f+1} 3 2 {T_ei[f, -1]+1} {T_ei[f, -1]+1} {T_ei[f, 0] + 1} {T_ei[f, 1] + 1} {T_ei[f, 2] + 1} {T_ei[f, 3] + 1}\n')
 
     stream.write('$EndElements')
