@@ -34,9 +34,9 @@ def RVE_sol_start(file, meshPath, outputPath, iload,
     
     dash_iload = '-'+iload    
     writeAlyaDat(os.path.join(outputPath,file+dash_iload+'.dat'), file, dash_iload, params_solver)
-    writeAlyaKer(os.path.join(outputPath,file+dash_iload+'.ker.dat'), iload, params_solver)
-    if params_solver['debug']:
-        writeAlyaPos(os.path.join(outputPath,file+dash_iload+'.post.alyadat'))
+    writeAlyaKer(os.path.join(outputPath,file+dash_iload+'.ker.dat'), iload, params_mesher, params_solver)
+
+    writeAlyaPos(os.path.join(outputPath,file+dash_iload+'.post.alyadat'))
     
     nOfMaterials = readAlyaMat(os.path.join(meshPath,file+'.mat.dat'))
 

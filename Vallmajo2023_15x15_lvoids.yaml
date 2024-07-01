@@ -36,7 +36,7 @@ Material:
         tauI: 19.0
         tauII: 31.2
         etaBK: 1.75
-        Kp: 1e+5
+        Kp: 1.0e+5
         
 ###############################################################################
 # RVE Generator preferences (RVE_gen/src/Inputs_RVE_generator.py)
@@ -111,6 +111,6 @@ RVE_mesher:
 RVE_solver:
     listloads: ['11', '22', '12', '23']
     debug:     true
-    u:         1.0e-5
+    u:         1.0e-7
     tf:        1.0
-    tinc:      0.1
+    tinc:      1.0

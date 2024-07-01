@@ -19,11 +19,12 @@ def createGeometry(gmshScript, nOfFibres, a, b):
 def setMesher(gmshScript, h):
     gmshScript.write(f'MeshSize{{ PointsOf{{ Surface{{:}}; }} }} = {h};\n\n')
 
+    # TODO
     #gmshScript.write(f'Mesh.Algorithm=8;\n')
     #gmshScript.write(f'Mesh 2;\n')
-    #gmshScript.write(f'Mesh.RecombinationAlgorithm = 0;\n')
+    #gmshScript.write(f'Mesh.RecombinationAlgorithm=0;\n')
     #gmshScript.write(f'RecombineMesh;\n')
-    #gmshScript.write(f'Mesh.SubdivisionAlgorithm = 1;\n')
+    #gmshScript.write(f'Mesh.SubdivisionAlgorithm=1;\n')
     #gmshScript.write(f'RefineMesh;\n')
     #gmshScript.write(f'OptimizeMesh "Laplace2D";\n\n')
 
