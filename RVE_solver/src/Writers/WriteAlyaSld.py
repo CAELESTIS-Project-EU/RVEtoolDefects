@@ -92,11 +92,11 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('  PROPERTIES\n')
     stream.write('    MATERIAL          = 1\n')
     stream.write(f'    DENSITY           = {rhom:1.4e}\n' )
-    stream.write('    CONSTITUTIVE_MODEL: ISOTROPIC \ \n')
+    stream.write(r'    CONSTITUTIVE_MODEL: ISOTROPIC \ \n')
     stream.write(f'      {E:1.4e} {nu:1.4f}\n')
     stream.write('    MATERIAL          = 2\n')
     stream.write(f'    DENSITY           = {rhof:1.4e}\n' )
-    stream.write('    CONSTITUTIVE_MODEL: ISOTROPIC \ \n')
+    stream.write(r'    CONSTITUTIVE_MODEL: ISOTROPIC \ \n')
     stream.write(f'      {E22:1.4e} {nu12:1.4f}\n')
     nmate_aux = nmate
     if kfl_coh == True:
@@ -104,12 +104,12 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     for imate in range(nmate_aux-2):
         stream.write(f'    MATERIAL          = {imate+3}\n')
         stream.write(f'    DENSITY           = {rhov:1.4e}\n' )
-        stream.write('    CONSTITUTIVE_MODEL: ISOTROPIC \ \n')
+        stream.write(r'    CONSTITUTIVE_MODEL: ISOTROPIC \ \n')
         stream.write(f'      {E22v:1.4e} {nu12v:1.4f}\n')
     if kfl_coh == True:
         stream.write(f'    MATERIAL          = {nmate}\n')
         stream.write(f'    DENSITY           = {rhoc:1.4e} {Kp:1.1e}\n')
-        stream.write('    COHESIVE_MODEL: TURON, CURRENT \ \n')
+        stream.write(r'    COHESIVE_MODEL: TURON, CURRENT \ \n')
         stream.write(f'      {GIc:1.4f} {GIIc:1.4f} {tauI:1.4f} {tauI:1.4f} {etaBK:1.4f} {Kp:1.1e} {0.0:1.4f} {0.0:1.4f} {0.001:1.4f}\n')
     stream.write('  END_PROPERTIES\n')
     stream.write('END_PHYSICAL_PROBLEM\n')
@@ -322,11 +322,11 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('  PROPERTIES\n')
     stream.write('    MATERIAL          = 1\n')
     stream.write(f'    DENSITY           = {rhom:1.4e}\n' )
-    stream.write('    CONSTITUTIVE_MODEL: ISOTROPIC \ \n')
+    stream.write(r'    CONSTITUTIVE_MODEL: ISOTROPIC \ \n')
     stream.write(f'      {E:1.4e} {nu:1.4f}\n')
     stream.write('    MATERIAL          = 2\n')
     stream.write(f'    DENSITY           = {rhof:1.4e}\n' )
-    stream.write('    CONSTITUTIVE_MODEL: ORTHOTROPIC \ \n')
+    stream.write(r'    CONSTITUTIVE_MODEL: ORTHOTROPIC \ \n')
     stream.write(f'      {E11:1.4e} {E22:1.4e} {E22:1.4e} {nu12:1.4f} {nu12:1.4f} {nu23:1.4f} {G12:1.4e} {G12:1.4e} {G23:1.4e}\n')
     nmate_aux = nmate
     if kfl_coh == True:
@@ -334,12 +334,12 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     for imate in range(nmate_aux-2):
         stream.write(f'    MATERIAL          = {imate+3}\n')
         stream.write(f'    DENSITY           = {rhov:1.4e}\n' )
-        stream.write('    CONSTITUTIVE_MODEL: ORTHOTROPIC \ \n')
+        stream.write(r'    CONSTITUTIVE_MODEL: ORTHOTROPIC \ \n')
         stream.write(f'      {E11v:1.4e} {E22v:1.4e} {E22v:1.4e} {nu12v:1.4f} {nu12v:1.4f} {nu23v:1.4f} {G12v:1.4e} {G12v:1.4e} {G23v:1.4e}\n')
     if kfl_coh == True:
         stream.write(f'    MATERIAL          = {nmate}\n')
         stream.write(f'    DENSITY           = {rhoc:1.4e} {Kp:1.1e}\n')
-        stream.write('    COHESIVE_MODEL: TURON, CURRENT \ \n')
+        stream.write(r'    COHESIVE_MODEL: TURON, CURRENT \ \n')
         stream.write(f'      {GIc:1.4f} {GIIc:1.4f} {tauI:1.4f} {tauII:1.4f} {etaBK:1.4f} {Kp:1.1e} {0.0:1.4f} {0.0:1.4f} {0.001:1.4f}\n')
     stream.write('  END_PROPERTIES\n')
     stream.write('  PARAMETERS\n')
