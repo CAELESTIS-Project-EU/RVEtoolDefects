@@ -94,11 +94,11 @@ RVE_gen:
 # RVE Mesher preferences (RVE_mesher/src/RVEmsh.py)
 ###############################################################################
 RVE_mesher:
-    gmshBinFile_path: gmsh
-   #gmsh2alya_path: /home/aortega/bsc/alya/master/Utils/user/gmsh2alya.pl
-    gmsh2alya_path: /Users/gguillam/BSC/alya/master/Utils/user/gmsh2alya.pl
-   #gmsh2alya_path: /gpfs/projecs/cns100/alya/builds/gmsh2alya.pl
-    domain:    3D                # 2D or 3D
+    gmshBinFile_path: "gmsh"
+   #gmsh2alya_path: "/home/aortega/bsc/alya/master/Utils/user/gmsh2alya.pl"
+    gmsh2alya_path: "/Users/gguillam/BSC/alya/master/Utils/user/gmsh2alya.pl"
+   #gmsh2alya_path: "/gpfs/projecs/cns100/alya/builds/gmsh2alya.pl"
+    domain:    "3D"              # 2D or 3D
     h:         0.0007            # in-plane size for 2D case
     cohes:     false             # false or true 
     # for 3D only:

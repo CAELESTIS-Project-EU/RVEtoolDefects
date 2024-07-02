@@ -30,7 +30,8 @@ def setMesher(gmshScript, h):
 
     gmshScript.write(f'Recombine Surface "*";\n')
     gmshScript.write(f'Mesh.Algorithm=8;               // Frontal-Delaunay for quads\n')
-    gmshScript.write(f'Mesh.RecombinationAlgorithm=3;  // Simple (2) Blossom full quad (3)\n')
+    gmshScript.write(f'Mesh.RecombinationAlgorithm=2;  // Simple full quad (2) Blossom full quad (3)\n')
+    gmshScript.write(f'Mesh.RecombineAll;\n')
     gmshScript.write(f'OptimizeMesh "Laplace2D";\n\n')
     
 def setoutputFile(gmshScript, mshFile):

@@ -24,7 +24,7 @@ def writeAlyaDat(file, filename, dash_iload, params_solver):
     stream.write(f'  TIME_INTERVAL:          {0.0:1.5f} {tf:1.5f}\n')
     stream.write(f'  TIME_STEP_SIZE=         {tinc:1.5f}\n')
     if debug:
-        stream.write('  NUMBER_OF_STEPS=        1\n')
+        stream.write('  NUMBER_OF_STEPS=        0\n')
     else:
         stream.write('  NUMBER_OF_STEPS=        1e6\n')
     stream.write('  MAXIMUM_NUMBER_GLOBAL=  1\n')
