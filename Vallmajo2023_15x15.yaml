@@ -87,7 +87,7 @@ RVE_gen:
 
     # Plot option
     #---------------------------------------------------------------------
-    kfl_plot:            True  # Interactive plot true or false
+    kfl_plot:            False  # Interactive plot true or false
 
 
 ###############################################################################

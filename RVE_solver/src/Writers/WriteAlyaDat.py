@@ -12,7 +12,7 @@ def writeAlyaDat(file, filename, dash_iload, params_solver):
     stream.write(f'  ALYA:                   {filename+dash_iload:s}\n')
     stream.write('  CODE=                   1\n')
     if debug:
-        stream.write('  LIVE_INFO:              SCREEN\n')
+        stream.write('  LIVE_INFO:              FILE\n')
         stream.write('  LOG_FILE:               ON\n')
     else:
         stream.write('  LIVE_INFO:              FILE\n')
