@@ -4,7 +4,7 @@
 ###############################################################################
 # General preferences. 
 General:
-    JobName: RVE_Vallmajo2023_15x15
+    JobName: RVE_Vallmajo2023_15x15_lvoids
     output_path: output
 
 ###############################################################################
@@ -46,11 +46,11 @@ RVE_gen:
     R_fibre:        0.0070      # Fibre average radius [mm]
     R_fibre_STDEV:  0.0003      # Standard deviation for fibres. Must be in the same units of fibre radius [mm]
     
-    R_void:         0.0020      # Void average radius [mm]
-    R_void_STDEV:   0.0004      # Standard deviation for voids. Must be in the same units of void radius [mm]
+    R_void:         0.0070      # Void average radius [mm]
+    R_void_STDEV:   0.0010      # Standard deviation for voids. Must be in the same units of void radius [mm]
     
     Vol_fibre:      0.55        # Overall fibre volume we wish to obtain
-    Vol_voids:      0.00        # Overall void volume we wish to obtain
+    Vol_voids:      0.07        # Overall void volume we wish to obtain
     
     delta_width:    15          # a= delta_width*2*R
     delta_height:   15          # b= delta_width*2*R
@@ -100,7 +100,7 @@ RVE_mesher:
    #gmsh2alya_path: "/gpfs/projecs/cns100/alya/builds/gmsh2alya.pl"
     domain:    "3D"              # 2D or 3D
     h:         0.0007            # in-plane size for 2D case
-    cohes:     false             # false or true 
+    cohes:     False             # false or true 
     # for 3D only:
     c:         0.01              # out-plane thickness
     nOfLevels: 5                 # Number of element through the RVE thickness
@@ -109,8 +109,9 @@ RVE_mesher:
 # RVE Sol preferences (RVE_solver/src/RVEsol.py)
 ###############################################################################
 RVE_solver:
+    nlgeom:    False
     listloads: ['11', '22', '12', '23']
-    debug:     true
+    debug:     True
     u:         1.0e-7
     tf:        1.0
     tinc:      1.0

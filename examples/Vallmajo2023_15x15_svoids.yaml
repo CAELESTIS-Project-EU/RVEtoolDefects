@@ -4,7 +4,7 @@
 ###############################################################################
 # General preferences. 
 General:
-    JobName: RVE2d_Liu2019_5x5
+    JobName: RVE_Vallmajo2023_15x15_svoids
     output_path: output
 
 ###############################################################################
@@ -12,48 +12,48 @@ General:
 ###############################################################################
 Material:
     Fibre:
-        rhof: 7.8e-9        # Not used
-        E11: 225.0e+3       # Not used
-        E22: 1.0e+3
-        nu12: 0.25   
-        nu23: 0.07          # Not used
-        G12: 15.0           # Not used
+        rhof: 7.8e-9
+        E11: 225.0e+3
+        E22: 15.0e+3
+        nu12: 0.2
+        nu23: 0.07
+        G12: 15.0
     Matrix:
-        rhom: 7.8e-9        # Not used
-        E: 500.0e+3           
-        nu: 0.25
+        rhom: 7.8e-9 
+        E: 4.2e+3
+        nu: 0.34
     Void:
-        rhov: 7.8e-9        # Not used
-        E11v: 2.30969e+05   # Not used
-        E22v: 1.63346e+04   # Not used
-        nu12v: 0.20597      # Not used
-        nu23v: 0.0705096    # Not used
-        G12v: 1.5481e+04    # Not used
-    Cohesive: 
-        rhoc: 1.3e-9        # Not used
-        GIc: 0.308          # Not used
-        GIIc: 0.828         # Not used
-        tauI: 19.0          # Not used
-        tauII: 31.2         # Not used
-        etaBK: 1.75         # Not used
-        Kp: 1.0e+5          # Not used
+        rhov: 7.8e-9
+        E11v: 2.30969e+05
+        E22v: 1.63346e+04
+        nu12v: 0.20597
+        nu23v: 0.0705096
+        G12v: 1.5481e+04
+    Cohesive:
+        rhoc: 1.3e-9
+        GIc: 0.308
+        GIIc: 0.828
+        tauI: 19.0
+        tauII: 31.2
+        etaBK: 1.75
+        Kp: 1.0e+5
         
 ###############################################################################
 # RVE Generator preferences (RVE_gen/src/Inputs_RVE_generator.py)
 ###############################################################################
 RVE_gen:
-  
-    R_fibre:        0.0100      # Fibre average radius [mm]
+    
+    R_fibre:        0.0070      # Fibre average radius [mm]
     R_fibre_STDEV:  0.0003      # Standard deviation for fibres. Must be in the same units of fibre radius [mm]
     
     R_void:         0.0020      # Void average radius [mm]
     R_void_STDEV:   0.0004      # Standard deviation for voids. Must be in the same units of void radius [mm]
     
-    Vol_fibre:      0.29        # Overall fibre volume we wish to obtain
-    Vol_voids:      0.00        # Overall void volume we wish to obtain
+    Vol_fibre:      0.55        # Overall fibre volume we wish to obtain
+    Vol_voids:      0.07        # Overall void volume we wish to obtain
     
-    delta_width:    5           # a= delta_width*2*R
-    delta_height:   5           # b= delta_width*2*R
+    delta_width:    15          # a= delta_width*2*R
+    delta_height:   15          # b= delta_width*2*R
     
     DISTMIN: [                  # Minimum distance multiplier between two consecutive fibre centres (thus, DISTMIN*Mean_Cylinder_radius is the minimum distance)
                                 # If = 0, the fibres touches. If <0, the fibres overlap
@@ -70,8 +70,8 @@ RVE_gen:
     N_cycles_max:   150         # Maximum number of cycles that the routine runs before starting all over again. Recommended 100-150 as maximum
     N_change:       3           # Number of iterations before changing criterion on First Heuristic. MinValue = 3
 
-    Error_V_fibres_perc:  1.    # % Maximum error allowed for the fibres volume content (percentage)
-    Error_V_voids_perc:   1.    # % Maximum error allowed for the voids volume content (percentage)
+    Error_V_fibres_perc:  5.    # % Maximum error allowed for the fibres volume content (percentage)
+    Error_V_voids_perc:   5.    # % Maximum error allowed for the voids volume content (percentage)
 
     # Options to create a larger RVE by repeating and merging a smaller RVE multiples times
     #---------------------------------------------------------------------
@@ -87,17 +87,18 @@ RVE_gen:
 
     # Plot option
     #---------------------------------------------------------------------
-    kfl_plot:            true  # Interactive plot true or false
+    kfl_plot:            False  # Interactive plot true or false
+
 
 ###############################################################################
 # RVE Mesher preferences (RVE_mesher/src/RVEmsh.py)
 ###############################################################################
 RVE_mesher:
-    gmshBinFile_path: gmsh
-   #gmsh2alya_path: /home/aortega/bsc/alya/master/Utils/user/gmsh2alya.pl
-    gmsh2alya_path: /Users/gguillam/BSC/alya/master/Utils/user/gmsh2alya.pl
-   #gmsh2alya_path: /gpfs/projects/cns100/alya/builds/gmsh2alya.pl
-    domain:    2D                # 2D or 3D
+    gmshBinFile_path: "gmsh"
+   #gmsh2alya_path: "/home/aortega/bsc/alya/master/Utils/user/gmsh2alya.pl"
+    gmsh2alya_path: "/Users/gguillam/BSC/alya/master/Utils/user/gmsh2alya.pl"
+   #gmsh2alya_path: "/gpfs/projecs/cns100/alya/builds/gmsh2alya.pl"
+    domain:    "3D"              # 2D or 3D
     h:         0.0007            # in-plane size for 2D case
     cohes:     false             # false or true 
     # for 3D only:
@@ -108,8 +109,9 @@ RVE_mesher:
 # RVE Sol preferences (RVE_solver/src/RVEsol.py)
 ###############################################################################
 RVE_solver:
+    nlgeom:    False
     listloads: ['11', '22', '12', '23']
-    debug:     true
+    debug:     True
     u:         1.0e-7
     tf:        1.0
     tinc:      1.0
