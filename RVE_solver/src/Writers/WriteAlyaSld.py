@@ -21,6 +21,9 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     tauII = params_material['Cohesive']['tauII']
     etaBK = params_material['Cohesive']['etaBK']
     Kp    = float(params_material['Cohesive']['Kp'])
+
+    # Get parameters solver
+    nlgeom = params_solver['nlgeom']
     
     stream = open(file, 'w')
 
@@ -84,7 +87,10 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         stream.write('    TEMPORAL_DERIVATIVES: STATIC\n')
     else:
         stream.write('    TEMPORAL_DERIVATIVES: DYNAMIC\n')
-    stream.write('    NLGEOM:               ON\n')
+    if nlgeom:
+        stream.write('    NLGEOM:               ON\n')
+    else:
+        stream.write('    NLGEOM:               OFF\n')
     stream.write('    THERMAL_ANALYSIS:     OFF\n')
     stream.write('    PLANE:                STRAIN\n')
     stream.write(f'    THICKNESS_OUT_OF_PLANE= {lz}\n')
@@ -130,14 +136,14 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('  END_ALGEBRAIC_SOLVER\n')
     stream.write('  RESIDUAL:             STANDARD\n') 
     stream.write('  SAFETY_FACTOR=        1.0\n') 
-    stream.write('  CONVERGENCE_TOLER=    1.0E-3, 1.0E-3\n')
+    stream.write('  CONVERGENCE_TOLER=    1.0E-4, 1.0E-3\n')
     stream.write('  MAXIMUM_ITERATION=    200\n')  
     stream.write('  VECTORIZED_ASSEMBLY:  ON\n')
     stream.write('END_NUMERICAL_TREATMENT\n')
     stream.write('$-------------------------------------------------------------------\n')
     stream.write('OUTPUT_&_POST_PROCESS\n')
+    stream.write('  START_POSTPROCESS_AT: STEP= 0\n')
     if debug:
-        stream.write('  START_POSTPROCESS_AT: STEP= 0\n')
         stream.write('  POSTPROCESS PARTI\n')
         stream.write('  POSTPROCESS PMATE\n')
         stream.write('  POSTPROCESS FIXNO\n')
@@ -161,15 +167,39 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     if iload == '11':
         # Longitudinal tension
         stream.write('    EPSXX\n')
+        stream.write('    EPSYY\n')
+        stream.write('    EPSXY\n')
         stream.write('    SIGXX\n')
+        stream.write('    SIGYY\n')
+        stream.write('    SIGXY\n')
+        stream.write('    DGR11\n')
+        stream.write('    DGR12\n')
+        stream.write('    DGR21\n')
+        stream.write('    DGR22\n')
     elif iload == '22':
         # Transverse tension
+        stream.write('    EPSXX\n')
         stream.write('    EPSYY\n')
+        stream.write('    EPSXY\n')
+        stream.write('    SIGXX\n')
         stream.write('    SIGYY\n')
+        stream.write('    SIGXY\n')
+        stream.write('    DGR11\n')
+        stream.write('    DGR12\n')
+        stream.write('    DGR21\n')
+        stream.write('    DGR22\n')
     elif iload == '12':
         # In-plane shear
+        stream.write('    EPSXX\n')
+        stream.write('    EPSYY\n')
         stream.write('    EPSXY\n')
+        stream.write('    SIGXX\n')
+        stream.write('    SIGYY\n')
         stream.write('    SIGXY\n')
+        stream.write('    DGR11\n')
+        stream.write('    DGR12\n')
+        stream.write('    DGR21\n')
+        stream.write('    DGR22\n')
     stream.write('  END_ELEMENT_SET\n')
     stream.write('END_OUTPUT_&_POST_PROCESS\n')
     stream.write('$-------------------------------------------------------------------\n')
@@ -177,34 +207,34 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('  CODES, NODES\n')
     if iload == '11':
         # Longitudinal tension
-        stream.write('            1 10 0.0 0.0 \n')
+        stream.write('            1 11 0.0 0.0 \n')
         stream.write('        1 & 3 11 0.0 0.0 \n')
-        stream.write('        1 & 4 10 0.0 0.0 \n')
-        stream.write('            2 10 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC \n')
-        stream.write('        2 & 3 10 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC  \n')
-        stream.write('        2 & 4 10 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC  \n')
-        stream.write('            3 00 0.0 0.0 \n')
-        stream.write('            4 00 0.0 0.0 \n')
+        stream.write('        1 & 4 11 0.0 0.0 \n')
+        stream.write('            2 11 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC \n')
+        stream.write('        2 & 3 11 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC \n')
+        stream.write('        2 & 4 11 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC \n')
+        stream.write('            3 01 0.0 0.0 \n')
+        stream.write('            4 01 0.0 0.0 \n')
     elif iload == '22':
         # Transverse tension
-        stream.write('            1 00 0.0 0.0 \n')
+        stream.write('            1 10 0.0 0.0 \n')
         stream.write('        1 & 3 11 0.0 0.0 \n')
         stream.write('        1 & 4 11 0.0 1.0, DISCRETE_FUNCTIONS= U_FUNC \n')
-        stream.write('            2 00 0.0 0.0 \n')
-        stream.write('        2 & 3 01 0.0 0.0 \n')
-        stream.write('        2 & 4 01 0.0 1.0, DISCRETE_FUNCTIONS= U_FUNC \n')
-        stream.write('            3 01 0.0 0.0 \n')
-        stream.write('            4 01 0.0 1.0, DISCRETE_FUNCTIONS= U_FUNC \n')
+        stream.write('            2 10 0.0 0.0 \n')
+        stream.write('        2 & 3 11 0.0 0.0 \n')
+        stream.write('        2 & 4 11 0.0 1.0, DISCRETE_FUNCTIONS= U_FUNC \n')
+        stream.write('            3 11 0.0 0.0 \n')
+        stream.write('            4 11 0.0 1.0, DISCRETE_FUNCTIONS= U_FUNC \n')
     elif iload == '12':
         # In-plane shear
         stream.write('            1 00 0.0 0.0 \n')
         stream.write('        1 & 3 11 0.0 0.0 \n')
-        stream.write('        1 & 4 00 0.0 0.0 \n')
+        stream.write('        1 & 4 11 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC \n')
         stream.write('            2 00 0.0 0.0 \n')
-        stream.write('        2 & 3 00 0.0 0.0 \n')
-        stream.write('        2 & 4 11 1.0 1.0, DISCRETE_FUNCTIONS= U_FUNC \n')
-        stream.write('            3 00 0.0 0.0 \n')
-        stream.write('            4 00 0.0 0.0 \n')
+        stream.write('        2 & 3 11 0.0 0.0 \n')
+        stream.write('        2 & 4 11 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC \n')
+        stream.write('            3 11 0.0 0.0 \n')
+        stream.write('            4 11 1.0 0.0, DISCRETE_FUNCTIONS= U_FUNC \n')
     stream.write('  END_CODES\n')
     stream.write('END_BOUNDARY_CONDITIONS\n')
     stream.write('$-------------------------------------------------------------------\n')
@@ -239,6 +269,9 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     tauII = params_material['Cohesive']['tauII']
     etaBK = params_material['Cohesive']['etaBK']
     Kp    = float(params_material['Cohesive']['Kp'])
+
+    # Get parameters solver
+    nlgeom = params_solver['nlgeom']
     
     # Preliminary calculations
     G23  = E22/2.0/(1+nu23)
@@ -316,7 +349,10 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         stream.write('    TEMPORAL_DERIVATIVES: STATIC\n')
     else:
         stream.write('    TEMPORAL_DERIVATIVES: DYNAMIC\n')
-    stream.write('    NLGEOM:               ON\n')
+    if nlgeom:
+        stream.write('    NLGEOM:               ON\n')
+    else:
+        stream.write('    NLGEOM:               OFF\n')
     stream.write('    THERMAL_ANALYSIS:     OFF\n')
     stream.write('  END_PROBLEM_DEFINITION\n')
     stream.write('  PROPERTIES\n')

@@ -1,6 +1,6 @@
 import yaml
 import os
-from RVE_gen.src import RVE_generator
+from RVE_gen.rve_generator import RVEgen
 from RVE_mesher.src import RVEmsh
 from RVE_solver.src import RVEsol
 import numpy as num
@@ -29,7 +29,7 @@ def runRVEtool(parameters_file):
 
     # RVE geometry generator
     #-------------------------------------------------------------------
-    RVE_generator.RVE_gen_start(JobName, gen_output, params['RVE_gen'])
+    RVEgen.RVE_gen_start(JobName, gen_output, params['RVE_gen'])
 
     # RVE geometry mesher
     #-------------------------------------------------------------------
@@ -63,5 +63,7 @@ if __name__=='__main__':
     #parameters_file = 'Vallmajo2023_15x15_lvoids.yaml' # Vallmajo with small voids 7%
     #parameters_file = 'Liu2019_5x5.yaml'               # Liu
 
+    parameters_file = os.path.join("examples", parameters_file)
+        
     # Run program
     runRVEtool(parameters_file)    

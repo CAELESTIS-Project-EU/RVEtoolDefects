@@ -44,6 +44,12 @@ python -m pip install -r requirements.txt
 ```
 export PATH=`gmsh_path:$PATH
 ```
+*Step 3:* Update submodules
+RVEtool uses a specific RVE generator not available as opensource. Source code can be shared with permission from the owner. Submodules are updated with the following command:
+
+```
+git submodule update --init --recursive
+```
 
 ## Usage
 Each folder contains a `main.py` file with the corresponding user inputs. Right now the user has to run the `main.py` for each `RVE_xxx` module.
@@ -58,43 +64,44 @@ The RVE model generated here referred to as `jobName` is stored in the `output` 
 The directory tree for the output folder is the following:
 ```bash
 .
-                outputs\
-                        jobName\ 
-                                 msh\ is the folder containing the mesh files
-│   │   │   ├── jobName.dims.dat 
-│   │   │   ├── jobName.mat.dat
-│   │   │   ├── jobName.fie.dat
-│   │   │   ├── jobName.geo.dat
-│   │   │   ├── jobName.set.dat
-│   │   │   ├── jobName.fix.dat
-│   │   │   ├── jobName.per.dat
-│   │   │   └── ...             
-│   │   ├── jobName-11\ is the longitudinal tension case
-│   │   │   ├── jobName-11.dat
-│   │   │   ├── jobName-11.ker.dat
-│   │   │   ├── jobName-11.dom.dat
-│   │   │   ├── jobName-11.sld.dat
-│   │   │   └── jobName-11.post.alyadat 
-│   │   ├── jobName-22\ is the transverse tension case
-│   │   │   ├── jobName-22.dat
-│   │   │   ├── jobName-22.ker.dat
-│   │   │   ├── jobName-22.dom.dat
-│   │   │   ├── jobName-22.sld.dat
-│   │   │   └── jobName-22.post.alyadat 
-│   │   ├── jobName-12\ is the in-plane shear case
-│   │   │   ├── jobName-12.dat
-│   │   │   ├── jobName-12.ker.dat
-│   │   │   ├── jobName-12.dom.dat
-│   │   │   ├── jobName-12.sld.dat
-│   │   │   └── jobName-12.post.alyadat 
-│   │   └── jobName-23\ is the out-of-plane shear case
-│   │       ├── jobName-23.dat
-│   │       ├── jobName-23.ker.dat
-│   │       ├── jobName-23.dom.dat
-│   │       ├── jobName-23.sld.dat
-│   │       └── jobName-23.post.alyadat 
-│   └── ...
-└── README.md The main readme\
+rvetool\
+      outputs\
+            jobName\ 
+               ├──  msh\ is the folder containing the mesh files
+   │     │     │     ├── jobName.dims.dat 
+   │     │     │     ├── jobName.mat.dat
+   │     │     │     ├── jobName.fie.dat
+   │     │     │     ├── jobName.geo.dat
+   │     │     │     ├── jobName.set.dat
+   │     │     │     ├── jobName.fix.dat
+   │     │     │     ├── jobName.per.dat
+   │     │     │     └── ...             
+   │     │     ├── jobName-11\ is the longitudinal tension case
+   │     │     │     ├── jobName-11.dat
+   │     │     │     ├── jobName-11.ker.dat
+   │     │     │     ├── jobName-11.dom.dat
+   │     │     │     ├── jobName-11.sld.dat
+   │     │     │     └── jobName-11.post.alyadat 
+   │     │     ├── jobName-22\ is the transverse tension case
+   │     │     │     ├── jobName-22.dat
+   │     │     │     ├── jobName-22.ker.dat
+   │     │     │     ├── jobName-22.dom.dat
+   │     │     │     ├── jobName-22.sld.dat
+   │     │     │     └── jobName-22.post.alyadat 
+   │     │     ├── jobName-12\ is the in-plane shear case
+   │     │     │     ├── jobName-12.dat
+   │     │     │     ├── jobName-12.ker.dat
+   │     │     │     ├── jobName-12.dom.dat
+   │     │     │     ├── jobName-12.sld.dat
+   │     │     │     └── jobName-12.post.alyadat 
+   │     │     └── jobName-23\ is the out-of-plane shear case
+   │     │           ├── jobName-23.dat
+   │     │           ├── jobName-23.ker.dat
+   │     │           ├── jobName-23.dom.dat
+   │     │           ├── jobName-23.sld.dat
+   │     │           └── jobName-23.post.alyadat 
+   │     └── ...
+   └── README.md The main readme\
 ```
 
 ## License
