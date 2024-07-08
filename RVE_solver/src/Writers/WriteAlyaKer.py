@@ -1,14 +1,15 @@
 import math
 
-def writeAlyaKer(file, iload, params_mesher, params_solver):
+def writeAlyaKer(file, iload, params_gen, params_mesher, params_solver):
     """ Alya caseName.ker.dat file
     """
     # Get inputs
     dim   = params_mesher['domain']
     debug = params_solver['debug']
     tf    = params_solver['tf']
-    u     = params_solver['u']
-    uc    = params_solver['uc']
+    eps   = params_solver['eps']
+    u     = params_gen['R_fibre']*params_gen['delta_width']*eps
+    uc    = params_mesher['c']*eps
     
     stream = open(file, 'w')
     

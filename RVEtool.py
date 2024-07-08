@@ -45,13 +45,15 @@ def runRVEtool(parameters_file):
                 os.makedirs(outputPath)
             # Run Alya writer
             RVEsol.RVE_sol_start(JobName, mesh_output, outputPath, iload,
-                                 params['RVE_solver'], params['Material'], params['RVE_mesher'])
+                                 params['RVE_gen'], , params['RVE_mesher'],
+                                 params['RVE_solver'], params['Material'])
         elif params['RVE_mesher']['domain'] == '3D':
             if not os.path.exists(outputPath):
                 os.makedirs(outputPath)
             # Run Alya writer
             RVEsol.RVE_sol_start(JobName, mesh_output, outputPath, iload,
-                                 params['RVE_solver'], params['Material'], params['RVE_mesher'])
+                                 params['RVE_gen'], params['RVE_mesher'],
+                                 params['RVE_solver'], params['Material'])
         else:
             continue
         

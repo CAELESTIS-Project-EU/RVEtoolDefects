@@ -112,6 +112,6 @@ RVE_solver:
     nlgeom:    True
     listloads: ['11', '22', '12', '23']
     debug:     True
-    u:         1.0e-7
+    eps:       1.0e-5
     tf:        1.0
     tinc:      1.0

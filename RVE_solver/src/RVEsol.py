@@ -22,7 +22,8 @@ else:
         pass
 
 def RVE_sol_start(file, meshPath, outputPath, iload,
-                  params_solver, params_material, params_mesher):
+                  params_gen, params_mesher,
+                  params_solver, params_material):
     """
     Alya writer files
     """
