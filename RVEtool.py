@@ -58,10 +58,11 @@ def runRVEtool(parameters_file):
 if __name__=='__main__':
     
     #parameters_file = 'Vallmajo2023_5x5.yaml'          # Vallmajo without voids small size
-    parameters_file = 'Vallmajo2023_15x15.yaml'         # Vallmajo without voids
+    #parameters_file = 'Vallmajo2023_15x15.yaml'         # Vallmajo without voids
     #parameters_file = 'Vallmajo2023_15x15_svoids.yaml' # Vallmajo with small voids 7%
     #parameters_file = 'Vallmajo2023_15x15_lvoids.yaml' # Vallmajo with small voids 7%
     #parameters_file = 'Liu2019_5x5.yaml'               # Liu
+    parameters_file = 'CAELESTIS_15x15.yaml'           # CAELESTIS without voids
 
     parameters_file = os.path.join("examples", parameters_file)
         
