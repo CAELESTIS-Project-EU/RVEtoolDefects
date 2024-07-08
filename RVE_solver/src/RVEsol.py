@@ -35,7 +35,7 @@ def RVE_sol_start(file, meshPath, outputPath, iload,
     
     dash_iload = '-'+iload    
     writeAlyaDat(os.path.join(outputPath,file+dash_iload+'.dat'), file, dash_iload, params_solver)
-    writeAlyaKer(os.path.join(outputPath,file+dash_iload+'.ker.dat'), iload, params_mesher, params_solver)
+    writeAlyaKer(os.path.join(outputPath,file+dash_iload+'.ker.dat'), params_gen, params_mesher, params_solver)
 
     writeAlyaPos(os.path.join(outputPath,file+dash_iload+'.post.alyadat'))
     

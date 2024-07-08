@@ -1,6 +1,6 @@
 import math
 
-def writeAlyaKer(file, iload, params_gen, params_mesher, params_solver):
+def writeAlyaKer(file, params_gen, params_mesher, params_solver):
     """ Alya caseName.ker.dat file
     """
     # Get inputs
@@ -28,7 +28,7 @@ def writeAlyaKer(file, iload, params_gen, params_mesher, params_solver):
     stream.write('  DISCRETE_FUNCTIONS\n')
     if dim == '2D':
         stream.write('    TOTAL_NUMBER= 3\n')
-        stream.write('    FUNCTIONS=  F_UX, DIMENSIONS= 2\n')
+        stream.write('    FUNCTIONS=  F_UXX, DIMENSIONS= 2\n')
         stream.write('      TIME_SHAPE: LINEAR\n')
         stream.write('      SHAPE_DEFINITION\n')
         stream.write('        2\n')
@@ -36,7 +36,7 @@ def writeAlyaKer(file, iload, params_gen, params_mesher, params_solver):
         stream.write(f'        {tf:1.2f}  {u:1.5e} 0.0\n') # Transverse tension 11
         stream.write('      END_SHAPE_DEFINITION\n')
         stream.write('    END_FUNCTIONS\n')
-        stream.write('    FUNCTIONS=  F_UY, DIMENSIONS= 2\n')
+        stream.write('    FUNCTIONS=  F_UYY, DIMENSIONS= 2\n')
         stream.write('      TIME_SHAPE: LINEAR\n')
         stream.write('      SHAPE_DEFINITION\n')
         stream.write('        2\n')
@@ -53,8 +53,8 @@ def writeAlyaKer(file, iload, params_gen, params_mesher, params_solver):
         stream.write('      END_SHAPE_DEFINITION\n')
         stream.write('    END_FUNCTIONS\n')
     else:
-        stream.write('    TOTAL_NUMBER= 4\n')
-        stream.write('    FUNCTIONS=  F_UX, DIMENSIONS= 3\n')
+        stream.write('    TOTAL_NUMBER= 5\n')
+        stream.write('    FUNCTIONS=  F_UXX, DIMENSIONS= 3\n')
         stream.write('      TIME_SHAPE: LINEAR\n')
         stream.write('      SHAPE_DEFINITION\n')
         stream.write('        2\n')
@@ -62,7 +62,7 @@ def writeAlyaKer(file, iload, params_gen, params_mesher, params_solver):
         stream.write(f'        {tf:1.2f}  {u:1.5e} 0.0 0.0\n') # Transverse tension 11
         stream.write('      END_SHAPE_DEFINITION\n')
         stream.write('    END_FUNCTIONS\n')
-        stream.write('    FUNCTIONS=  F_UY, DIMENSIONS= 3\n')
+        stream.write('    FUNCTIONS=  F_UYY, DIMENSIONS= 3\n')
         stream.write('      TIME_SHAPE: LINEAR\n')
         stream.write('      SHAPE_DEFINITION\n')
         stream.write('        2\n')
@@ -70,7 +70,7 @@ def writeAlyaKer(file, iload, params_gen, params_mesher, params_solver):
         stream.write(f'        {tf:1.2f}  0.0 {u:1.5e} 0.0\n') # Transverse tension 22
         stream.write('      END_SHAPE_DEFINITION\n')
         stream.write('    END_FUNCTIONS\n')
-        stream.write('    FUNCTIONS=  F_UY, DIMENSIONS= 3\n')
+        stream.write('    FUNCTIONS=  F_UZZ, DIMENSIONS= 3\n')
         stream.write('      TIME_SHAPE: LINEAR\n')
         stream.write('      SHAPE_DEFINITION\n')
         stream.write('        2\n')
@@ -84,6 +84,14 @@ def writeAlyaKer(file, iload, params_gen, params_mesher, params_solver):
         stream.write('        2\n')
         stream.write('        0.0  0.0 0.0 0.0\n')
         stream.write(f'        {tf:1.2f}  {math.sin(math.pi/4.)*u:1.5e} {math.sin(math.pi/4.)*u:1.5e} 0.0\n') # Shear 12
+        stream.write('      END_SHAPE_DEFINITION\n')
+        stream.write('    END_FUNCTIONS\n')
+        stream.write('    FUNCTIONS=  F_UYZ, DIMENSIONS= 3\n')
+        stream.write('      TIME_SHAPE: LINEAR\n')
+        stream.write('      SHAPE_DEFINITION\n')
+        stream.write('        2\n')
+        stream.write('        0.0  0.0 0.0 0.0\n')
+        stream.write(f'        {tf:1.2f}  0.0 {math.sin(math.pi/4.)*uc:1.5e} {math.sin(math.pi/4.)*uc:1.5e}\n') # Shear 12
         stream.write('      END_SHAPE_DEFINITION\n')
         stream.write('    END_FUNCTIONS\n')
     stream.write('  END_DISCRETE_FUNCTIONS\n')
