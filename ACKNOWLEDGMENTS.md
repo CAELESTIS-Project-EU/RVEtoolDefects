@@ -6,8 +6,11 @@ The development of this tool has been supported by the following institutions:
 
 	- Horizon Europe CAELESTIS project (Contract No. 101056886)
 		- Mesh generation; material defects; UQ analysis.
-	- Horizon Europe DIDEAROT project (Contract No. 101056682)
-		- Mesh generation; damage modelling; ML based models.
+                
+**Spanish government through the following R&D projects:**
+
+        - TransMisiones TIFON project (Contract No. PLEC2023-010251)
+                - Synthetic data generation; Deep Material Networks.
                 
 **Academia:**
 
