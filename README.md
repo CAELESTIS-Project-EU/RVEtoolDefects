@@ -1,7 +1,5 @@
 <img src="img/RVEtool.png" align="center" alt="RVEtool" height="80px">
 
-[![DOI](https://zenodo.org/badge/637725015.svg)](https://zenodo.org/doi/10.5281/zenodo.12690717)
-
 # RVEtool
 
 ## Description
