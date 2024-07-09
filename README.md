@@ -1,4 +1,7 @@
-<img src="img/RVEtool.png" align="center" alt="RVEtool" height="80px">
+<h1 align="center">
+  <img src="img/RVEtool-Logo.png" align="center" alt="RVEtool" height="80px">
+  <img src="img/BSC-white.svg" align="center" alt="RVEtool" height="80px">
+</h1>
 
 # RVEtool
 
