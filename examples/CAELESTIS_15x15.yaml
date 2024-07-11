@@ -112,6 +112,6 @@ RVE_solver:
     nlgeom:    True
     listloads: ['11', '22', '12', '23']
     debug:     False
-    eps:       1.0e-5             # Far field strain (-)   Based on Vallmajo 2023
+    eps:       1.0e-4             # Far field strain (-)   Based on Vallmajo 2023
     tf:        1.0
     tinc:      1.0
