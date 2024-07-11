@@ -102,16 +102,16 @@ RVE_mesher:
     h:         0.0007            # in-plane size for 2D case
     cohes:     False             # false or true 
     # for 3D only:
-    c:         0.001             # out-plane thickness
+    c:         0.0014            # out-plane thickness
     nOfLevels: 2                 # Number of element through the RVE thickness
 
 ###############################################################################
 # RVE Sol preferences (RVE_solver/src/RVEsol.py)
 ###############################################################################
 RVE_solver:
-    nlgeom:    False
+    nlgeom:    True
     listloads: ['11', '22', '12', '23']
-    debug:     True
+    debug:     False
     eps:       1.0e-5             # Far field strain (-)   Based on Vallmajo 2023
     tf:        1.0
     tinc:      1.0
