@@ -55,7 +55,7 @@ def mesher3D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, c, nO
     gmshMesher(RVE, h, scriptFile, mshFile)
 
     verbosityPrint('Running gmsh...')
-    os.system(f'{gmshBinFile} {scriptFile} -o {mshFile} -v 0 -2')
+    os.system(f'{gmshBinFile} {scriptFile} -v 0 -')
 
     verbosityPrint('Reading mesh file...')
     x_id, T_ei, T_fi = readMesh(mshFile)

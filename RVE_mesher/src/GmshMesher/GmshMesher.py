@@ -17,24 +17,16 @@ def createGeometry(gmshScript, nOfFibres, a, b):
     # gmshScript.write(f'v() = BooleanIntersection{{ Surface{{0}}; Delete; }}{{ Surface{{:}}; Delete; }};\n\n')
 
 def setMesher(gmshScript, h):
-    gmshScript.write(f'MeshSize{{ PointsOf{{ Surface{{:}}; }} }} = {4*h};\n\n')
+    gmshScript.write(f'MeshSize{{ PointsOf{{ Surface{{:}}; }} }} = {2*h};\n\n')
 
-   #gmshScript.write(f'Mesh.Algorithm=6; // Frontal-Delaunay (6) Frontal-Delaunay for quads (8)\n')
     gmshScript.write(f'Mesh.Algorithm=8; // Frontal-Delaunay (6) Frontal-Delaunay for quads (8)\n')
     gmshScript.write(f'Mesh 2;\n')
-   #gmshScript.write(f'Mesh.RecombinationAlgorithm=0; // Simple (0) Simple full quad (2) Blossom full quad (3)\n')
-    gmshScript.write(f'Mesh.RecombinationAlgorithm=2; // Simple (0) Simple full quad (2) Blossom full quad (3)\n')
+    gmshScript.write(f'Mesh.RecombinationAlgorithm=0; // Simple (0) Simple full quad (2) Blossom full quad (3)\n')
     gmshScript.write(f'RecombineMesh;\n')
     gmshScript.write(f'Mesh.SubdivisionAlgorithm=1;\n')
     gmshScript.write(f'RefineMesh;\n')
     gmshScript.write(f'OptimizeMesh "Laplace2D";\n\n')
 
-    #gmshScript.write(f'Recombine Surface "*";\n')
-    #gmshScript.write(f'Mesh.Algorithm=8;               // Frontal-Delaunay for quads\n')
-    #gmshScript.write(f'Mesh.RecombinationAlgorithm=2;  // Simple (0) Simple full quad (2) Blossom full quad (3)\n')
-    #gmshScript.write(f'Mesh.RecombineAll;\n')
-    #gmshScript.write(f'OptimizeMesh "Laplace2D";\n\n')
-    
 def setoutputFile(gmshScript, mshFile):
     gmshScript.write('Mesh.MshFileVersion = 2.2;\n')
 
