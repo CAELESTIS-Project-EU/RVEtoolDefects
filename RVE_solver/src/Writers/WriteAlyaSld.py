@@ -541,7 +541,7 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         stream.write('        2 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
         stream.write('        3 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
         stream.write('        4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('    1 & 3 & 6 011 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+        stream.write('    1 & 3 & 6 111 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
         stream.write('    1 & 4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
         stream.write('    2 & 3 & 6 011 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
         stream.write('    2 & 4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
