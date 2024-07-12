@@ -96,14 +96,15 @@ RVE_gen:
 RVE_mesher:
     gmshBinFile_path: "gmsh"
    #gmsh2alya_path: "/home/aortega/bsc/alya/master/Utils/user/gmsh2alya.pl"
-    gmsh2alya_path: "/Users/gguillam/BSC/alya/master/Utils/user/gmsh2alya.pl"
+   #gmsh2alya_path: "/Users/gguillam/BSC/alya/master/Utils/user/gmsh2alya.pl"
    #gmsh2alya_path: "/gpfs/projecs/cns100/alya/builds/gmsh2alya.pl"
+    gmsh2alya_path: "gmsh2alya.pl"
     domain:    "3D"              # 2D or 3D
     h:         0.0007            # in-plane size for 2D case
     cohes:     False             # false or true 
     # for 3D only:
-    c:         0.0014            # out-plane thickness
-    nOfLevels: 2                 # Number of element through the RVE thickness
+    c:         0.0021            # out-plane thickness
+    nOfLevels: 3                 # Number of element through the RVE thickness
 
 ###############################################################################
 # RVE Sol preferences (RVE_solver/src/RVEsol.py)
