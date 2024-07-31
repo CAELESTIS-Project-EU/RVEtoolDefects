@@ -12,9 +12,9 @@ General:
 ###############################################################################
 Material:
     Fibre:
-        rhof: 7.8e-9
+        rhof: 1.81e-9
         E11: 290.0e+3
-        E22: 14.5e+3
+        E22: 17.24e+3
         nu12: 0.2
         nu23: 0.25
         G12: 27.6e+3
@@ -43,14 +43,14 @@ Material:
 ###############################################################################
 RVE_gen:
     
-    R_fibre:        0.0070      # Fibre average radius [mm]
-    R_fibre_STDEV:  0.0003      # Standard deviation for fibres. Must be in the same units of fibre radius [mm]
+    R_fibre:        0.0025      # Fibre average radius [mm]
+    R_fibre_STDEV:  0.00015     # Standard deviation for fibres. Must be in the same units of fibre radius [mm]
     
     R_void:         0.0020      # Void average radius [mm]
-    R_void_STDEV:   0.0004      # Standard deviation for voids. Must be in the same units of void radius [mm]
+    R_void_STDEV:   0.0002      # Standard deviation for voids. Must be in the same units of void radius [mm]
     
-    Vol_fibre:      0.55        # Overall fibre volume we wish to obtain
-    Vol_voids:      0.00        # Overall void volume we wish to obtain
+    Vol_fibre:      0.60        # Overall fibre volume we wish to obtain
+    Vol_voids:      0.035       # Overall void volume we wish to obtain
     
     delta_width:    15          # a= delta_width*2*R
     delta_height:   15          # b= delta_width*2*R
@@ -70,8 +70,8 @@ RVE_gen:
     N_cycles_max:   150         # Maximum number of cycles that the routine runs before starting all over again. Recommended 100-150 as maximum
     N_change:       3           # Number of iterations before changing criterion on First Heuristic. MinValue = 3
 
-    Error_V_fibres_perc:  5.    # % Maximum error allowed for the fibres volume content (percentage)
-    Error_V_voids_perc:   5.    # % Maximum error allowed for the voids volume content (percentage)
+    Error_V_fibres_perc:  3.    # % Maximum error allowed for the fibres volume content (percentage)
+    Error_V_voids_perc:   3.    # % Maximum error allowed for the voids volume content (percentage)
 
     # Options to create a larger RVE by repeating and merging a smaller RVE multiples times
     #---------------------------------------------------------------------
@@ -100,10 +100,10 @@ RVE_mesher:
    #gmsh2alya_path: "/gpfs/projecs/cns100/alya/builds/gmsh2alya.pl"
     gmsh2alya_path: "gmsh2alya.pl"
     domain:    "3D"              # 2D or 3D
-    h:         0.0007            # in-plane size for 2D case
+    h:         0.00035           # in-plane size for 2D case
     cohes:     False             # false or true 
     # for 3D only:
-    c:         0.0021            # out-plane thickness
+    c:         0.00105           # out-plane thickness (nOfLevels*h)
     nOfLevels: 3                 # Number of element through the RVE thickness
 
 ###############################################################################
@@ -112,7 +112,7 @@ RVE_mesher:
 RVE_solver:
     nlgeom:    True
     listloads: ['11', '22', '12', '23']
-    debug:     False
+    debug:     True
     eps:       1.0e-5             # Far field strain (-)   Based on Vallmajo 2023
     tf:        1.0
     tinc:      1.0
