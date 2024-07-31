@@ -1,3 +1,0 @@
-[submodule "RVE_gen/rve_generator"]
-	path = RVE_gen/rve_generator
-	url = https://gitlab.bsc.es/csm/rve_generator.git
