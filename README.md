@@ -3,7 +3,7 @@
   <img src="img/BSC-white.svg" align="center" alt="RVEtool" height="80px">
 </div>
 
-# RVEtool
+# RVEtool for defects
 
 ## Description
 <!--
