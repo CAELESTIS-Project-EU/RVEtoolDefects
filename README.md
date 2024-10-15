@@ -133,3 +133,15 @@ rvetool\
    │     └── ...
    └── README.md The main readme\
 ```
+
+## Full framework availability
+
+This repository makes uses of other tools which are not incluced because they are subjected to different Licences agreement:
+
+- RVE generator for UD materials including the presence of defects.
+- gmsh2alya script.
+- Alya executable file.
+
+For any questions, please contact to Gerard Guillamet (gerard.guillamet@bsc.es)
+
+

@@ -17,14 +17,12 @@ def RVE_msh_start(caseName, mesh_output, gen_output, params):
     h           = params['h']
     c           = params['c']
     nOfLevels   = params['nOfLevels']
-    generateCohesiveElements = params['cohes']
 
     if params['domain']=='2D':
-        mesher2D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h,
-                 generateCohesiveElements)
+        mesher2D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h)
     elif params['domain']=='3D':
         mesher3D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h,
-                 c, nOfLevels, generateCohesiveElements)
+                 c, nOfLevels)
     
 
     

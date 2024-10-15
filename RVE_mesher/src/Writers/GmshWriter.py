@@ -27,11 +27,10 @@ def writePhysicalNames(stream):
     stream.write('3 1 "bulk"\n')
     stream.write('3 2 "fibre1"\n')
     stream.write('3 3 "fibre2"\n')
-    stream.write('3 4 "cohesive"\n')
-    stream.write('2 5 "faces_x0"\n')
-    stream.write('2 6 "faces_x1"\n')
-    stream.write('2 7 "faces_y0"\n')
-    stream.write('2 8 "faces_y1"\n')
+    stream.write('2 4 "faces_x0"\n')
+    stream.write('2 5 "faces_x1"\n')
+    stream.write('2 6 "faces_y0"\n')
+    stream.write('2 7 "faces_y1"\n')
     stream.write('$EndPhysicalNames\n')
 
 def writeNodes(stream, x_id):

@@ -35,14 +35,6 @@ Material:
         nu12v: 0.001
         nu23v: 0.001
         G12v: 0.001
-    Cohesive:
-        rhoc: 1.3e-9
-        GIc: 0.308
-        GIIc: 0.828
-        tauI: 19.0
-        tauII: 31.2
-        etaBK: 1.75
-        Kp: 1.0e+5
         
 ###############################################################################
 # RVE Generator preferences (RVE_gen/src/Inputs_RVE_generator.py)
@@ -107,7 +99,6 @@ RVE_mesher:
     gmsh2alya_path: "gmsh2alya.pl"
     domain:    "3D"              # 2D or 3D
     h:         0.00035           # in-plane size for 2D case
-    cohes:     False             # false or true 
     # for 3D only:
     c:         0.00105           # out-plane thickness (nOfLevels*h)
     nOfLevels: 3                 # Number of element through the RVE thickness

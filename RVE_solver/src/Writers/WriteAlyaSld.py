@@ -1,5 +1,5 @@
 
-def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload, lx, ly, lz, debug,
+def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, nmate, iload, lx, ly, lz, debug,
                    params_solver, params_material, params_job):
     """ Alya caseName.sld.dat file
     """
@@ -23,17 +23,6 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         nu12v = float(params_material['Void']['nu12v'])
     except:
         rhov, E22v, nu12v = 0.0, 0.0, 0.0
-    try:
-        # Cohesive (optional)
-        rhoc  = float(params_material['Cohesive']['rhoc'])
-        GIc   = float(params_material['Cohesive']['GIc'])
-        GIIc  = float(params_material['Cohesive']['GIIc'])
-        tauI  = float(params_material['Cohesive']['tauI'])
-        tauII = float(params_material['Cohesive']['tauII'])
-        etaBK = float(params_material['Cohesive']['etaBK'])
-        Kp    = float(params_material['Cohesive']['Kp'])
-    except:
-        rhoc, GIc, GIIc, tauI, tauII, etaBK, Kp = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 
     # Get parameters solver
     nlgeom = bool(params_solver['nlgeom'])
@@ -91,7 +80,6 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('$    CODE 2: FIBER\n')
     stream.write('$    CODE 3: DAMAGED FIBER (OPTIONAL)\n')
     stream.write('$     ...\n')
-    stream.write('$    CODE N: COHESIVE (OPTIONAL)\n')
     stream.write('$\n')
     stream.write('$ Units:     SI (-)\n')
     stream.write('$\n')
@@ -122,18 +110,11 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('    CONSTITUTIVE_MODEL: ISOTROPIC \\ \n')
     stream.write(f'      {E22:1.4e} {nu12:1.4f}\n')
     nmate_aux = nmate
-    if kfl_coh == True:
-        nmate_aux = nmate_aux - 1
     for imate in range(nmate_aux-2):
         stream.write(f'    MATERIAL          = {imate+3}\n')
         stream.write(f'    DENSITY           = {rhov:1.4e}\n' )
         stream.write('    CONSTITUTIVE_MODEL: ISOTROPIC \\ \n')
         stream.write(f'      {E22v:1.4e} {nu12v:1.4f}\n')
-    if kfl_coh == True:
-        stream.write(f'    MATERIAL          = {nmate}\n')
-        stream.write(f'    DENSITY           = {rhoc:1.4e} {Kp:1.1e}\n')
-        stream.write('    COHESIVE_MODEL: TURON, CURRENT \\ \n')
-        stream.write(f'      {GIc:1.4f} {GIIc:1.4f} {tauI:1.4f} {tauI:1.4f} {etaBK:1.4f} {Kp:1.1e} {0.0:1.4f} {0.0:1.4f} {0.001:1.4f}\n')
     stream.write('  END_PROPERTIES\n')
     stream.write('END_PHYSICAL_PROBLEM\n')
     stream.write('$-------------------------------------------------------------------\n')
@@ -143,7 +124,6 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('  STEADY_STATE:         OFF\n')
     stream.write('  ALGEBRAIC_SOLVER\n')
     stream.write('    SOLVER:             CG\n')
-    stream.write('$    SOLVER:             GMRES, KRYLOV= 200\n')
     stream.write('    CONVERGENCE:        ITERATIONS= 3000, TOLERANCE= 1.0E-6\n')
     stream.write('    PRECONDITIONER:     DIAGONAL\n')
     stream.write('    COARSE:             OFF\n')
@@ -178,8 +158,6 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         stream.write('  POSTPROCESS SRPRO\n')
         stream.write('  POSTPROCESS BVESS\n')
         stream.write('  POSTPROCESS DISPL\n')
-        stream.write('  POSTPROCESS DAMAG\n')
-        stream.write('  POSTPROCESS DCOHE\n')
     stream.write('  ELEMENT_SET\n')
     stream.write('    EPSXX\n')
     stream.write('    EPSYY\n')
@@ -257,7 +235,7 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.close()
 
     
-def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload, lx, ly, lz, debug,
+def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, nmate, iload, lx, ly, lz, debug,
                    params_solver, params_material, params_job):
     """ Alya caseName.sld.dat file
     """
@@ -286,17 +264,6 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         G12v  = float(params_material['Void']['G12v'])
     except:
         rhov, E11v, E22v, nu12v, nu23v, G12v = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-    # Cohesives (optional)
-    try:
-        rhoc  = float(params_material['Cohesive']['rhoc'])
-        GIc   = float(params_material['Cohesive']['GIc'])
-        GIIc  = float(params_material['Cohesive']['GIIc'])
-        tauI  = float(params_material['Cohesive']['tauI'])
-        tauII = float(params_material['Cohesive']['tauII'])
-        etaBK = float(params_material['Cohesive']['etaBK'])
-        Kp    = float(params_material['Cohesive']['Kp'])
-    except:
-        rhoc, GIc, GIIc, tauI, tauII, etaBK, Kp = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
         
     # Get parameters solver
     nlgeom = bool(params_solver['nlgeom'])
@@ -368,7 +335,6 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('$    CODE 2: FIBER\n')
     stream.write('$    CODE 3: DAMAGED FIBER (OPTIONAL)\n')
     stream.write('$     ...\n')
-    stream.write('$    CODE N: COHESIVE (OPTIONAL)\n')
     stream.write('$\n')
     stream.write('$ Units:     SI (-)\n')
     stream.write('$\n')
@@ -397,18 +363,11 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('    CONSTITUTIVE_MODEL: ORTHOTROPIC \\ \n')
     stream.write(f'      {E11:1.4e} {E22:1.4e} {E22:1.4e} {nu12:1.4f} {nu12:1.4f} {nu23:1.4f} {G12:1.4e} {G12:1.4e} {G23:1.4e}\n')
     nmate_aux = nmate
-    if kfl_coh == True:
-        nmate_aux = nmate_aux - 1
     for imate in range(nmate_aux-2):
         stream.write(f'    MATERIAL          = {imate+3}\n')
         stream.write(f'    DENSITY           = {rhov:1.4e}\n' )
         stream.write('    CONSTITUTIVE_MODEL: ORTHOTROPIC \\ \n')
         stream.write(f'      {E11v:1.4e} {E22v:1.4e} {E22v:1.4e} {nu12v:1.4f} {nu12v:1.4f} {nu23v:1.4f} {G12v:1.4e} {G12v:1.4e} {G23v:1.4e}\n')
-    if kfl_coh == True:
-        stream.write(f'    MATERIAL          = {nmate}\n')
-        stream.write(f'    DENSITY           = {rhoc:1.4e} {Kp:1.1e}\n')
-        stream.write('    COHESIVE_MODEL: TURON, CURRENT \\ \n')
-        stream.write(f'      {GIc:1.4f} {GIIc:1.4f} {tauI:1.4f} {tauII:1.4f} {etaBK:1.4f} {Kp:1.1e} {0.0:1.4f} {0.0:1.4f} {0.001:1.4f}\n')
     stream.write('  END_PROPERTIES\n')
     stream.write('  PARAMETERS\n')
     stream.write('    CSYS_MATERIAL: FIELD= 1, VECTORS\n')
@@ -420,10 +379,7 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('  TIME_INTEGRATION:     NEWMARK, DAMPED\n')
     stream.write('  STEADY_STATE:         OFF\n')
     stream.write('  ALGEBRAIC_SOLVER\n')
-    if kfl_coh == True:
-        stream.write('    SOLVER:             GMRES, KRYLOV= 200\n')
-    else:
-        stream.write('    SOLVER:             CG\n')
+    stream.write('    SOLVER:             CG\n')
     stream.write('    CONVERGENCE:        ITERATIONS= 10000, TOLERANCE= 1.0E-5\n')
     stream.write('    PRECONDITIONER:     DIAGONAL\n')
     stream.write('    COARSE:             OFF\n')
@@ -459,8 +415,6 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         stream.write('  POSTPROCESS PELTY\n')
         stream.write('  POSTPROCESS BVESS\n')
         stream.write('  POSTPROCESS DISPL\n')
-        stream.write('$  POSTPROCESS DAMAG\n')
-        stream.write('$  POSTPROCESS DCOHE\n')
     stream.write('  ELEMENT_SET\n')
     stream.write('    EPSXX\n')
     stream.write('    EPSYY\n')

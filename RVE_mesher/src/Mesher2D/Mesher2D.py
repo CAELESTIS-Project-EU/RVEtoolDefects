@@ -19,7 +19,6 @@ from RVE_mesher.src.MeshOperations import \
     DetectMaterials, \
     DetectInterfaces, \
     GlobalMeshFaces, \
-    AddCohesiveElements, \
     PeriodicBoundaryConditions, \
     ObtainBoundaryFaces, \
     Set2DBoundaries
@@ -55,7 +54,7 @@ def joinPeriodicBoundaryConditions(e42_i, e31_i, v41_i, v42_i, v43_i):
 
     return pbc_i
 
-def mesher2D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, generateCohesiveElements):
+def mesher2D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h):
     """
     Boundary conditions:
 
@@ -90,8 +89,6 @@ def mesher2D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, gener
         CODE 1: MATRIX
         CODE 2: FIBER
         CODE 3: DAMAGED FIBER (OPTIONAL)
-         ...
-        CODE N: COHESIVE (OPTIONAL)
     """
     
     # Get the start time
@@ -123,13 +120,6 @@ def mesher2D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, gener
 
     verbosityPrint('Obtaining global faces...')
     faces_ef, e_fe, markedFaces_f, interfaces_f = GlobalMeshFaces.globalMeshFaces(T_ei, T_fi)
-   
-    if generateCohesiveElements:
-        verbosityPrint('Adding cohesive elements...')
-        x_id, T_ei, type_e = AddCohesiveElements.addCohesiveElements(x_id, T_ei, T_fi, faces_ef, e_fe,
-                                                                     markedFaces_f, interfaces_f)
-        verbosityPrint('Obtaining new boundary faces...')
-        T_fi = ObtainBoundaryFaces.obtainBoundaryFaces(T_ei)
     
     verbosityPrint('Classifying boundary faces...')
     b1_f, b2_f, b3_f, b4_f = DetectInterfaces.detectInterfaces(x_id, T_fi, a, b)
@@ -152,8 +142,6 @@ def mesher2D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, gener
     nOfElements = T_ei.shape[0]
 
     verbosityPrint('Writing extra Alya mesh files...')
-    if generateCohesiveElements:
-        writeElementType(os.path.join(mesh_output, caseName+'.cha.dat'), type_e, 1)
 
     writeElementLocalDirections(os.path.join(mesh_output, caseName+'.fie.dat'), nOfElements)
 

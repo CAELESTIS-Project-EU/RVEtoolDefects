@@ -20,7 +20,6 @@ from RVE_mesher.src.MeshOperations import \
     DetectMaterials, \
     DetectInterfaces, \
     GlobalMeshFaces, \
-    AddCohesiveElements, \
     PeriodicBoundaryConditions, \
     ObtainBoundaryFaces
 
@@ -41,7 +40,7 @@ else:
     def verbosityPrint(str):
         pass
 
-def mesher3D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, c, nOfLevels, generateCohesiveElements):
+def mesher3D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, c, nOfLevels):
     
     # Get the start time
     t1 = time.time()
@@ -72,13 +71,6 @@ def mesher3D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, c, nO
 
     verbosityPrint('Obtaining global faces...')
     faces_ef, e_fe, markedFaces_f, interfaces_f = GlobalMeshFaces.globalMeshFaces(T_ei, T_fi)
-
-    if generateCohesiveElements:
-        verbosityPrint('Adding cohesive elements...')
-        x_id, T_ei, type_e = AddCohesiveElements.addCohesiveElements(x_id, T_ei, T_fi, faces_ef, e_fe,
-                                                                     markedFaces_f, interfaces_f)
-        verbosityPrint('Obtaining new boundary faces...')
-        T_fi = ObtainBoundaryFaces.obtainBoundaryFaces(T_ei)
 
     verbosityPrint('Classifying boundary faces...')
     b1_f, b2_f, b3_f, b4_f = DetectInterfaces.detectInterfaces(x_id, T_fi, a, b)
@@ -112,8 +104,6 @@ def mesher3D(caseName, mesh_output, gen_output, gmshBinFile, gmsh2alya, h, c, nO
     nOf3dElements = T3d_ei.shape[0]
 
     verbosityPrint('Writing extra Alya mesh files...')
-    if generateCohesiveElements:
-        writeElementType(f'{os.path.join(mesh_output, caseName)}.cha.dat', type_e, nOfLevels)
 
     writeElementLocalDirections(f'{os.path.join(mesh_output, caseName)}.fie.dat', nOf3dElements)
 

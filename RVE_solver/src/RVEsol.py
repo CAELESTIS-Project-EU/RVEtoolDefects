@@ -2,7 +2,6 @@ import os
 import time
 
 from RVE_solver.src.Readers.ReadAlyaMat import readAlyaMat
-from RVE_solver.src.Readers.ReadAlyaCha import readAlyaCha
 from RVE_solver.src.Readers.ReadAlyaGeo import readAlyaGeo
 
 from RVE_solver.src.Writers.WriteAlyaDat import writeAlyaDat
@@ -39,23 +38,19 @@ def RVE_sol_start(file, meshPath, outputPath, iload,
     
     nOfMaterials = readAlyaMat(os.path.join(meshPath,file+'.mat.dat'))
 
-    kfl_coh = False
-    if os.path.exists(os.path.join(meshPath,file+'.cha.dat')):
-        kfl_coh = readAlyaCha(os.path.join(meshPath,file+'.cha.dat'))
-
     dim, lx, ly, lz = readAlyaGeo(os.path.join(meshPath,file+'.geo.dat'))
     if dim == 2:
         lz = params_mesher['c']
         
     writeAlyaKer(os.path.join(outputPath,file+dash_iload+'.ker.dat'), lx, ly, iload, params_mesher, params_solver)
         
-    writeAlyaDom(os.path.join(outputPath,file+dash_iload+'.dom.dat'), file, dim, nOfMaterials, kfl_coh)
+    writeAlyaDom(os.path.join(outputPath,file+dash_iload+'.dom.dat'), file, dim, nOfMaterials)
 
     if dim == 2:
-        writeAlyaSld2D(os.path.join(outputPath,file+dash_iload+'.sld.dat'), file, dash_iload, 'STATIC', kfl_coh, nOfMaterials, iload, lx, ly, lz, params_solver['debug'], params_solver, params_material, params_job)
+        writeAlyaSld2D(os.path.join(outputPath,file+dash_iload+'.sld.dat'), file, dash_iload, 'STATIC', nOfMaterials, iload, lx, ly, lz, params_solver['debug'], params_solver, params_material, params_job)
 
     else:
-        writeAlyaSld3D(os.path.join(outputPath,file+dash_iload+'.sld.dat'), file, dash_iload, 'STATIC', kfl_coh, nOfMaterials, iload, lx, ly, lz, params_solver['debug'], params_solver, params_material, params_job)
+        writeAlyaSld3D(os.path.join(outputPath,file+dash_iload+'.sld.dat'), file, dash_iload, 'STATIC', nOfMaterials, iload, lx, ly, lz, params_solver['debug'], params_solver, params_material, params_job)
 
     # Get job setup
     try:
