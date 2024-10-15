@@ -7,16 +7,16 @@
 
 ## Description
 
-RVEtool is a high-performance modeling package that integrates various tools for meshing and performing finite element analysis (FEA) on micromechanical models of fiber-reinforced materials, including the presence of defects (voids). Its primary finite element solver for high-fidelity structural mechanics simulations is [Alya multiphysics](https://www.bsc.es/research-development/research-areas/engineering-simulations/alya-high-performance-computational), designed for large-scale, high-performance computing. Additionally, COUPONtool is optimized for generating large-scale synthetic datasets, facilitating the deployment of advanced Artificial Intelligence (AI) models and enabling Uncertainty Quantification Analysis (UQA) when used with the [PyCOMPSs](https://pypi.org/project/pycompss/) parallel computing framework.
+RVEtoolDefects is a high-performance modeling package that integrates various tools for meshing and performing finite element analysis (FEA) on micromechanical models of fiber-reinforced materials, including the presence of defects (voids). Its primary finite element solver for high-fidelity structural mechanics simulations is [Alya multiphysics](https://www.bsc.es/research-development/research-areas/engineering-simulations/alya-high-performance-computational), designed for large-scale, high-performance computing. Additionally, COUPONtool is optimized for generating large-scale synthetic datasets, facilitating the deployment of advanced Artificial Intelligence (AI) models and enabling Uncertainty Quantification Analysis (UQA) when used with the [PyCOMPSs](https://pypi.org/project/pycompss/) parallel computing framework.
 
 
 ## Synthetic data generation
 
-For synthetic data generation the RVEtool can be orchestrated by [PyCOMPSs](https://pypi.org/project/pycompss/) parallel framework. The use of PyCOMPSs allow to perform large-scale Design of Experiments (DoE) when is executed in HPC environments.
+For synthetic data generation the RVEtoolDefects can be orchestrated by [PyCOMPSs](https://pypi.org/project/pycompss/) parallel framework. The use of PyCOMPSs allow to perform large-scale Design of Experiments (DoE) when is executed in HPC environments.
 
-## RVEtool modules
+## RVEtoolDefects modules
 
-RVEtool has three main modules for the finite element model generation:
+RVEtoolDefects has three main modules for the finite element model generation:
 
   * `RVE_gen`: It requires `.npz` file containing the information of the morphology for the micromechanical unit-cell.
   * `RVE_mesher`: It uses [Gmsh](https://gmsh.info) as a 2-d and 3-d finite element mesh generator with built-in pre processing capabilities.
@@ -35,6 +35,14 @@ RVEtool has three main modules for the finite element model generation:
 - Sequential (`ASCII`) format or parallel I/O (`MPIO`).
 - Parallel mesh partitioning.
 - Iterative solvers for symmetric and unsymmetric matrices.
+
+## Boundary Conditions
+
+The RVEtool has the capability to apply different types of boundary conditions:
+
+- Linear BCs: this method uses the prescription of the deformation gradient as `(F-I)`.
+- Periodic BCs: this method uses displacement fluctuations and prescribes the deformation gradient as `(F-I)`.  
+- Dirichlet with PBCs: this method is equivalent but requires a specific constraint of faces, edges and nodes to represent a loading case scenario.
 
 ## Pre-requisites
 
@@ -60,11 +68,16 @@ RVEtool uses a specific RVE generator not available as opensource. Source code c
 git submodule update --init --recursive
 ```
 
-## Usage
-The repository contains a main file `RVEtool.py` which loads a `yaml` file containing all the user inputs.
+## General usage
+The repository contains a main file named as `RVEtool.py` which loads a YAML file containing all the user inputs necessary for the generation, meshing and resolution of the micromechanical model. To command to run the RVEtool is:
+
+```
+python3 RVEtool.py --exp-file=/examples/job_name.yaml
+```
 
 ## Output models
-The RVE model generated here referred to as `jobName` is stored in the `output` folder. This folder is generated automatically if no exists. The user can define the number of load case scenarios for the RVE `jobName`. The current load cases are derived from transversally isotropic materials and they are the following:
+
+The RVE model generated here referred to as `jobName` is stored in the `output_path` folder. This folder is generated automatically if no exists. The user can define the number of load case scenarios for the RVE `jobName` following the material system (1-2-3) or the global system (x-y-z). The load cases available for 2D and 3D are the following:
 
 2D models:
 - Transverse tension (11 componenent)
@@ -77,7 +90,7 @@ The RVE model generated here referred to as `jobName` is stored in the `output` 
 - In-plane shear (12 component)
 - Out-of-plane shear (23 compomnent)
 
-An example of the resulting directory (3D model) for the output folder is the following:
+An example of the resulting directory (3D model, four load cases) for the output folder is the following:
 ```bash
 .
 rvetool\

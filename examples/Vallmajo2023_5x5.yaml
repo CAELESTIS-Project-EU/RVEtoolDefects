@@ -6,7 +6,13 @@
 General:
     JobName: RVE_Vallmajo2023_5x5
     output_path: output
-
+    Machine: 'MareNostrum5'
+    Cores: 112
+    QoS: 'gp_debug'
+    Account: 'bsc21'
+    Execution_timeHH: '02'
+    Project: 'Paper'
+    
 ###############################################################################
 # Material properties
 ###############################################################################

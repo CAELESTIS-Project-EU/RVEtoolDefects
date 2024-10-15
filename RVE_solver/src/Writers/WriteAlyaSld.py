@@ -1,30 +1,47 @@
 
 def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload, lx, ly, lz, debug,
-                   params_solver, params_material):
+                   params_solver, params_material, params_job):
     """ Alya caseName.sld.dat file
     """
 
-    # Get material properties
+    try:
+        project_name = str(params_job['Project'])
+    except:
+        project_name = 'Name'
+    
+    # Get general material properties (mandatory)
     rhof  = float(params_material['Fibre']['rhof'])
-    E22   = params_material['Fibre']['E22']
-    nu12  = params_material['Fibre']['nu12']
-    rhom  = params_material['Matrix']['rhom']
-    E     = params_material['Matrix']['E']
-    nu    = params_material['Matrix']['nu']
-    rhov  = float(params_material['Void']['rhov'])
-    E22v  = params_material['Void']['E22v']
-    nu12v = params_material['Void']['nu12v']
-    rhoc  = float(params_material['Cohesive']['rhoc'])
-    GIc   = params_material['Cohesive']['GIc']
-    GIIc  = params_material['Cohesive']['GIIc']
-    tauI  = params_material['Cohesive']['tauI']
-    tauII = params_material['Cohesive']['tauII']
-    etaBK = params_material['Cohesive']['etaBK']
-    Kp    = float(params_material['Cohesive']['Kp'])
+    E22   = float(params_material['Fibre']['E22'])
+    nu12  = float(params_material['Fibre']['nu12'])
+    rhom  = float(params_material['Matrix']['rhom'])
+    E     = float(params_material['Matrix']['E'])
+    nu    = float(params_material['Matrix']['nu'])
+    # Voids (optional)
+    try:
+        rhov  = float(params_material['Void']['rhov'])
+        E22v  = float(params_material['Void']['E22v'])
+        nu12v = float(params_material['Void']['nu12v'])
+    except:
+        rhov, E22v, nu12v = 0.0, 0.0, 0.0
+    try:
+        # Cohesive (optional)
+        rhoc  = float(params_material['Cohesive']['rhoc'])
+        GIc   = float(params_material['Cohesive']['GIc'])
+        GIIc  = float(params_material['Cohesive']['GIIc'])
+        tauI  = float(params_material['Cohesive']['tauI'])
+        tauII = float(params_material['Cohesive']['tauII'])
+        etaBK = float(params_material['Cohesive']['etaBK'])
+        Kp    = float(params_material['Cohesive']['Kp'])
+    except:
+        rhoc, GIc, GIIc, tauI, tauII, etaBK, Kp = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 
     # Get parameters solver
-    nlgeom = params_solver['nlgeom']
-    
+    nlgeom = bool(params_solver['nlgeom'])
+    try:
+        BCtype = str(params_solver['BCtype'])
+    except:
+        BCtype = 'Periodic'
+        
     stream = open(file, 'w')
 
     stream.write('$-------------------------------------------------------------------\n')
@@ -78,7 +95,7 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('$\n')
     stream.write('$ Units:     SI (-)\n')
     stream.write('$\n')
-    stream.write('$ Reference:\n')
+    stream.write(f'$ Reference: {project_name:s} project\n')
     stream.write('$\n')
     stream.write('$-------------------------------------------------------------------\n')
     stream.write('PHYSICAL_PROBLEM\n')
@@ -164,115 +181,130 @@ def writeAlyaSld2D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         stream.write('  POSTPROCESS DAMAG\n')
         stream.write('  POSTPROCESS DCOHE\n')
     stream.write('  ELEMENT_SET\n')
-    if iload == '11':
-        # Longitudinal tension
-        stream.write('    EPSXX\n')
-        stream.write('    EPSYY\n')
-        stream.write('    EPSXY\n')
-        stream.write('    SIGXX\n')
-        stream.write('    SIGYY\n')
-        stream.write('    SIGXY\n')
-        stream.write('    DGR11\n')
-        stream.write('    DGR12\n')
-        stream.write('    DGR21\n')
-        stream.write('    DGR22\n')
-    elif iload == '22':
-        # Transverse tension
-        stream.write('    EPSXX\n')
-        stream.write('    EPSYY\n')
-        stream.write('    EPSXY\n')
-        stream.write('    SIGXX\n')
-        stream.write('    SIGYY\n')
-        stream.write('    SIGXY\n')
-        stream.write('    DGR11\n')
-        stream.write('    DGR12\n')
-        stream.write('    DGR21\n')
-        stream.write('    DGR22\n')
-    elif iload == '12':
-        # In-plane shear
-        stream.write('    EPSXX\n')
-        stream.write('    EPSYY\n')
-        stream.write('    EPSXY\n')
-        stream.write('    SIGXX\n')
-        stream.write('    SIGYY\n')
-        stream.write('    SIGXY\n')
-        stream.write('    DGR11\n')
-        stream.write('    DGR12\n')
-        stream.write('    DGR21\n')
-        stream.write('    DGR22\n')
+    stream.write('    EPSXX\n')
+    stream.write('    EPSYY\n')
+    stream.write('    EPSXY\n')
+    stream.write('    SIGXX\n')
+    stream.write('    SIGYY\n')
+    stream.write('    SIGXY\n')
+    stream.write('    DGR11\n')
+    stream.write('    DGR12\n')
+    stream.write('    DGR21\n')
+    stream.write('    DGR22\n')
     stream.write('  END_ELEMENT_SET\n')
     stream.write('END_OUTPUT_&_POST_PROCESS\n')
     stream.write('$-------------------------------------------------------------------\n')
     stream.write('BOUNDARY_CONDITIONS, TRANSIENT\n')
-    stream.write('  CODES, NODES\n')
-    if iload == '11':
-        # Transverse tension
-        stream.write('            1 11 0.0 0.0\n')
-        stream.write('        1 & 3 11 0.0 0.0\n')
-        stream.write('        1 & 4 11 0.0 0.0\n')
-        stream.write('            2 11 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        2 & 3 11 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        2 & 4 11 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('            3 01 0.0 0.0\n')
-        stream.write('            4 01 0.0 0.0\n')
-    elif iload == '22':
-        # Transverse tension
-        stream.write('            1 10 0.0 0.0\n')
-        stream.write('        1 & 3 11 0.0 0.0\n')
-        stream.write('        1 & 4 11 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('            2 10 0.0 0.0\n')
-        stream.write('        2 & 3 11 0.0 0.0\n')
-        stream.write('        2 & 4 11 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('            3 11 0.0 0.0\n')
-        stream.write('            4 11 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
-    elif iload == '12':
-        # In-plane shear
-        stream.write('            1 01 0.0 0.0\n')
-        stream.write('        1 & 3 11 0.0 0.0\n')
-        stream.write('        1 & 4 11 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('            2 01 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('        2 & 3 11 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('        2 & 4 11 1.0 1.0, DISCRETE_FUNCTIONS= F_UXY\n')
-        stream.write('            3 10 0.0 0.0\n')
-        stream.write('            4 10 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+    if BCtype == 'Periodic':
+        stream.write('  PARAMETERS\n')
+        stream.write('    DISPLACEMENT_GRADIENT: PERIODIC, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('  END_PARAMETERS\n')
+        stream.write('  CODES, NODES\n')
+        stream.write('    1 & 3 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 3 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 4 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 4 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+    elif BCtype == 'Linear':
+        stream.write('  PARAMETERS\n')
+        stream.write('    DISPLACEMENT_GRADIENT: LINEAR, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('  END_PARAMETERS\n')
+        stream.write('  CODES, NODES\n')
+        stream.write('        1 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        2 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        3 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        4 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 3 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 3 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 4 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 4 11 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+    elif BCtype == 'Standard' or BCtype == 'Manual':
+        stream.write('  CODES, NODES\n')
+        if iload == '11' or iload == 'XX':
+            # Transverse tension
+            stream.write('            1 11 0.0 0.0\n')
+            stream.write('        1 & 3 11 0.0 0.0\n')
+            stream.write('        1 & 4 11 0.0 0.0\n')
+            stream.write('            2 11 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        2 & 3 11 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        2 & 4 11 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('            3 01 0.0 0.0\n')
+            stream.write('            4 01 0.0 0.0\n')
+        elif iload == '22' or iload == 'YY':
+            # Transverse tension
+            stream.write('            1 10 0.0 0.0\n')
+            stream.write('        1 & 3 11 0.0 0.0\n')
+            stream.write('        1 & 4 11 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('            2 10 0.0 0.0\n')
+            stream.write('        2 & 3 11 0.0 0.0\n')
+            stream.write('        2 & 4 11 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('            3 11 0.0 0.0\n')
+            stream.write('            4 11 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
+        elif iload == '12' or iload == 'XY':
+            # In-plane shear
+            stream.write('            1 01 0.0 0.0\n')
+            stream.write('        1 & 3 11 0.0 0.0\n')
+            stream.write('        1 & 4 11 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('            2 01 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        2 & 3 11 0.0 1.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        2 & 4 11 1.0 1.0, DISCRETE_FUNCTIONS= F_UXY\n')
+            stream.write('            3 10 0.0 0.0\n')
+            stream.write('            4 10 1.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+    
     stream.write('  END_CODES\n')
     stream.write('END_BOUNDARY_CONDITIONS\n')
     stream.write('$-------------------------------------------------------------------\n')
     
     stream.close()
+
     
 def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload, lx, ly, lz, debug,
-                   params_solver, params_material):
+                   params_solver, params_material, params_job):
     """ Alya caseName.sld.dat file
     """
-
-    # Get material properties
+    try:
+        project_name = str(params_job['Project'])
+    except:
+        project_name = 'Name'
+        
+    # Get general material properties (mandatory)
     rhof  = float(params_material['Fibre']['rhof'])
-    E11   = params_material['Fibre']['E11']
-    E22   = params_material['Fibre']['E22']
-    nu12  = params_material['Fibre']['nu12']
-    nu23  = params_material['Fibre']['nu23']
-    G12   = params_material['Fibre']['G12']
-    rhom  = params_material['Matrix']['rhom']
-    E     = params_material['Matrix']['E']
-    nu    = params_material['Matrix']['nu']
-    rhov  = float(params_material['Void']['rhov'])
-    E11v  = params_material['Void']['E11v']
-    E22v  = params_material['Void']['E22v']
-    nu12v = params_material['Void']['nu12v']
-    nu23v = params_material['Void']['nu23v']
-    G12v  = params_material['Void']['G12v']
-    rhoc  = float(params_material['Cohesive']['rhoc'])
-    GIc   = params_material['Cohesive']['GIc']
-    GIIc  = params_material['Cohesive']['GIIc']
-    tauI  = params_material['Cohesive']['tauI']
-    tauII = params_material['Cohesive']['tauII']
-    etaBK = params_material['Cohesive']['etaBK']
-    Kp    = float(params_material['Cohesive']['Kp'])
-
+    E11   = float(params_material['Fibre']['E11'])
+    E22   = float(params_material['Fibre']['E22'])
+    nu12  = float(params_material['Fibre']['nu12'])
+    nu23  = float(params_material['Fibre']['nu23'])
+    G12   = float(params_material['Fibre']['G12'])
+    rhom  = float(params_material['Matrix']['rhom'])
+    E     = float(params_material['Matrix']['E'])
+    nu    = float(params_material['Matrix']['nu'])
+    # Voids (optional)
+    try:
+        rhov  = float(params_material['Void']['rhov'])
+        E11v  = float(params_material['Void']['E11v'])
+        E22v  = float(params_material['Void']['E22v'])
+        nu12v = float(params_material['Void']['nu12v'])
+        nu23v = float(params_material['Void']['nu23v'])
+        G12v  = float(params_material['Void']['G12v'])
+    except:
+        rhov, E11v, E22v, nu12v, nu23v, G12v = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+    # Cohesives (optional)
+    try:
+        rhoc  = float(params_material['Cohesive']['rhoc'])
+        GIc   = float(params_material['Cohesive']['GIc'])
+        GIIc  = float(params_material['Cohesive']['GIIc'])
+        tauI  = float(params_material['Cohesive']['tauI'])
+        tauII = float(params_material['Cohesive']['tauII'])
+        etaBK = float(params_material['Cohesive']['etaBK'])
+        Kp    = float(params_material['Cohesive']['Kp'])
+    except:
+        rhoc, GIc, GIIc, tauI, tauII, etaBK, Kp = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        
     # Get parameters solver
-    nlgeom = params_solver['nlgeom']
-    
+    nlgeom = bool(params_solver['nlgeom'])
+    try:
+        BCtype = str(params_solver['BCtype'])
+    except:
+        BCtype = 'Periodic'
+        
     # Preliminary calculations
     G23  = E22/2.0/(1+nu23)
     G23v = E22v/2.0/(1+nu23v)
@@ -340,7 +372,7 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('$\n')
     stream.write('$ Units:     SI (-)\n')
     stream.write('$\n')
-    stream.write('$ Reference:\n')
+    stream.write(f'$ Reference: {project_name:s} project\n')
     stream.write('$\n')
     stream.write('$-------------------------------------------------------------------\n')
     stream.write('PHYSICAL_PROBLEM\n')
@@ -388,8 +420,10 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('  TIME_INTEGRATION:     NEWMARK, DAMPED\n')
     stream.write('  STEADY_STATE:         OFF\n')
     stream.write('  ALGEBRAIC_SOLVER\n')
-    stream.write('    SOLVER:             CG\n')
-    stream.write('$    SOLVER:             GMRES, KRYLOV= 200\n')
+    if kfl_coh == True:
+        stream.write('    SOLVER:             GMRES, KRYLOV= 200\n')
+    else:
+        stream.write('    SOLVER:             CG\n')
     stream.write('    CONVERGENCE:        ITERATIONS= 10000, TOLERANCE= 1.0E-5\n')
     stream.write('    PRECONDITIONER:     DIAGONAL\n')
     stream.write('    COARSE:             OFF\n')
@@ -399,7 +433,7 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
     stream.write('  END_ALGEBRAIC_SOLVER\n')
     stream.write('  RESIDUAL:             STANDARD\n') 
     stream.write('  SAFETY_FACTOR=        1.0\n') 
-    stream.write('  CONVERGENCE_TOLER=    1.0E-4, 1.0E-3\n')
+    stream.write('  CONVERGENCE_TOLER=    1.0E-3, 1.0E-2\n')
     stream.write('  MAXIMUM_ITERATION=    20\n')  
     stream.write('  VECTORIZED_ASSEMBLY:  ON\n')
     stream.write('END_NUMERICAL_TREATMENT\n')
@@ -428,215 +462,218 @@ def writeAlyaSld3D(file, filename, dash_iload, kfl_timei, kfl_coh, nmate, iload,
         stream.write('$  POSTPROCESS DAMAG\n')
         stream.write('$  POSTPROCESS DCOHE\n')
     stream.write('  ELEMENT_SET\n')
-    if iload == '11':
-        # Longitudinal tension
-        stream.write('    EPSXX\n')
-        stream.write('    EPSYY\n')
-        stream.write('    EPSZZ\n')
-        stream.write('    EPSYZ\n')
-        stream.write('    EPSXZ\n')
-        stream.write('    EPSXY\n')
-        stream.write('    SIGXX\n')
-        stream.write('    SIGYY\n')
-        stream.write('    SIGZZ\n')
-        stream.write('    SIGYZ\n')
-        stream.write('    SIGXZ\n')
-        stream.write('    SIGXY\n')
-        stream.write('    DGR11\n')
-        stream.write('    DGR12\n')
-        stream.write('    DGR13\n')
-        stream.write('    DGR21\n')
-        stream.write('    DGR22\n')
-        stream.write('    DGR23\n')
-        stream.write('    DGR31\n')
-        stream.write('    DGR32\n')
-        stream.write('    DGR33\n')
-    elif iload == '22':
-        # Transverse tension
-        stream.write('    EPSXX\n')
-        stream.write('    EPSYY\n')
-        stream.write('    EPSZZ\n')
-        stream.write('    EPSYZ\n')
-        stream.write('    EPSXZ\n')
-        stream.write('    EPSXY\n')
-        stream.write('    SIGXX\n')
-        stream.write('    SIGYY\n')
-        stream.write('    SIGZZ\n')
-        stream.write('    SIGYZ\n')
-        stream.write('    SIGXZ\n')
-        stream.write('    SIGXY\n')
-        stream.write('    DGR11\n')
-        stream.write('    DGR12\n')
-        stream.write('    DGR13\n')
-        stream.write('    DGR21\n')
-        stream.write('    DGR22\n')
-        stream.write('    DGR23\n')
-        stream.write('    DGR31\n')
-        stream.write('    DGR32\n')
-        stream.write('    DGR33\n')
-    elif iload == '12':
-        # In-plane shear
-        stream.write('    EPSXX\n')
-        stream.write('    EPSYY\n')
-        stream.write('    EPSZZ\n')
-        stream.write('    EPSYZ\n')
-        stream.write('    EPSXZ\n')
-        stream.write('    EPSXY\n')
-        stream.write('    SIGXX\n')
-        stream.write('    SIGYY\n')
-        stream.write('    SIGZZ\n')
-        stream.write('    SIGYZ\n')
-        stream.write('    SIGXZ\n')
-        stream.write('    SIGXY\n')
-        stream.write('    DGR11\n')
-        stream.write('    DGR12\n')
-        stream.write('    DGR13\n')
-        stream.write('    DGR21\n')
-        stream.write('    DGR22\n')
-        stream.write('    DGR23\n')
-        stream.write('    DGR31\n')
-        stream.write('    DGR32\n')
-        stream.write('    DGR33\n')
-    elif iload == '23':
-        # Transverse shear
-        stream.write('    EPSXX\n')
-        stream.write('    EPSYY\n')
-        stream.write('    EPSZZ\n')
-        stream.write('    EPSYZ\n')
-        stream.write('    EPSXZ\n')
-        stream.write('    EPSXY\n')
-        stream.write('    SIGXX\n')
-        stream.write('    SIGYY\n')
-        stream.write('    SIGZZ\n')
-        stream.write('    SIGYZ\n')
-        stream.write('    SIGXZ\n')
-        stream.write('    SIGXY\n')
-        stream.write('    DGR11\n')
-        stream.write('    DGR12\n')
-        stream.write('    DGR13\n')
-        stream.write('    DGR21\n')
-        stream.write('    DGR22\n')
-        stream.write('    DGR23\n')
-        stream.write('    DGR31\n')
-        stream.write('    DGR32\n')
-        stream.write('    DGR33\n')
+    stream.write('    EPSXX\n')
+    stream.write('    EPSYY\n')
+    stream.write('    EPSZZ\n')
+    stream.write('    EPSYZ\n')
+    stream.write('    EPSXZ\n')
+    stream.write('    EPSXY\n')
+    stream.write('    SIGXX\n')
+    stream.write('    SIGYY\n')
+    stream.write('    SIGZZ\n')
+    stream.write('    SIGYZ\n')
+    stream.write('    SIGXZ\n')
+    stream.write('    SIGXY\n')
+    stream.write('    DGR11\n')
+    stream.write('    DGR12\n')
+    stream.write('    DGR13\n')
+    stream.write('    DGR21\n')
+    stream.write('    DGR22\n')
+    stream.write('    DGR23\n')
+    stream.write('    DGR31\n')
+    stream.write('    DGR32\n')
+    stream.write('    DGR33\n')
     stream.write('  END_ELEMENT_SET\n')
     stream.write('END_OUTPUT_&_POST_PROCESS\n')
     stream.write('$-------------------------------------------------------------------\n')
     stream.write('BOUNDARY_CONDITIONS, TRANSIENT\n')
-    stream.write('  CODES, NODES\n')
-    if iload == '11' or iload == 'ZZ':
-        # Longitudinal tension in ZZ
-        stream.write('            5 001 0.0 0.0 0.0\n')
-        stream.write('        1 & 5 001 0.0 0.0 0.0\n')
-        stream.write('        2 & 5 001 0.0 0.0 0.0\n')
-        stream.write('        3 & 5 001 0.0 0.0 0.0\n')
-        stream.write('        4 & 5 001 0.0 0.0 0.0\n')
-        stream.write('    1 & 3 & 5 001 0.0 0.0 0.0\n')
-        stream.write('    1 & 4 & 5 001 0.0 0.0 0.0\n')
-        stream.write('    2 & 3 & 5 001 0.0 0.0 0.0\n')
-        stream.write('    2 & 4 & 5 001 0.0 0.0 0.0\n')
-        stream.write('            6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('        1 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('        2 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('        3 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('        4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('    1 & 3 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('    1 & 4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('    2 & 3 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('    2 & 4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-    elif iload == '33' or iload == 'YY':
-        # Transverse tension in YY
-        stream.write('            3 010 0.0 0.0 0.0\n')
-        stream.write('        1 & 3 010 0.0 0.0 0.0\n')
-        stream.write('        2 & 3 010 0.0 0.0 0.0\n')
-        stream.write('        5 & 3 010 0.0 0.0 0.0\n')
-        stream.write('        6 & 3 010 0.0 0.0 0.0\n')
-        stream.write('    1 & 5 & 3 010 0.0 0.0 0.0\n')
-        stream.write('    1 & 6 & 3 010 0.0 0.0 0.0\n')
-        stream.write('    2 & 5 & 3 010 0.0 0.0 0.0\n')
-        stream.write('    2 & 6 & 3 010 0.0 0.0 0.0\n')
-        stream.write('            4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('        1 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('        2 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('        5 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('        6 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('    1 & 5 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('    1 & 6 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('    2 & 5 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('    2 & 6 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-    elif iload == '22' or iload == 'XX':
-        # Transverse tension in XX
-        stream.write('            1 100 0.0 0.0 0.0\n')
-        stream.write('        3 & 1 100 0.0 0.0 0.0\n')
-        stream.write('        4 & 1 100 0.0 0.0 0.0\n')        
-        stream.write('        5 & 1 100 0.0 0.0 0.0\n')
-        stream.write('        6 & 1 100 0.0 0.0 0.0\n')
-        stream.write('    3 & 5 & 1 100 0.0 0.0 0.0\n')
-        stream.write('    3 & 6 & 1 100 0.0 0.0 0.0\n')
-        stream.write('    4 & 5 & 1 100 0.0 0.0 0.0\n')
-        stream.write('    4 & 6 & 1 100 0.0 0.0 0.0\n')
-        stream.write('            2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        3 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        4 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        5 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        6 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('    3 & 5 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('    3 & 6 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('    4 & 5 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('    4 & 6 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-    elif iload == '12' or iload == 'XZ':
-        # In-plane pure shear
-        stream.write('            1 001 0.0 0.0 0.0\n')
-        stream.write('        3 & 1 001 0.0 0.0 0.0\n')
-        stream.write('        4 & 1 001 0.0 0.0 0.0\n')
-        stream.write('        5 & 1 101 0.0 0.0 0.0\n')      
-        stream.write('    5 & 3 & 1 111 0.0 0.0 0.0\n')
-        stream.write('    5 & 4 & 1 101 0.0 0.0 0.0\n')
-        stream.write('            5 100 0.0 0.0 0.0\n')
-        stream.write('        3 & 5 100 0.0 0.0 0.0\n')
-        stream.write('        4 & 5 100 0.0 0.0 0.0\n')
-        stream.write('            2 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('        3 & 2 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('        4 & 2 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('        5 & 2 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')        
-        stream.write('    5 & 3 & 2 101 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('    5 & 4 & 2 101 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
-        stream.write('            6 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        1 & 6 101 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        2 & 6 101 1.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UXZ\n')
-        stream.write('        3 & 6 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('        4 & 6 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('    1 & 3 & 6 101 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('    1 & 4 & 6 101 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('    2 & 3 & 6 101 1.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UXZ\n')
-        stream.write('    2 & 4 & 6 101 1.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UXZ\n')
-    elif iload == '23' or iload == 'XY':
-        # Transverse shear
-        stream.write('          1 010 0.0 0.0 0.0\n') 
-        stream.write('      5 & 1 010 0.0 0.0 0.0\n') 
-        stream.write('      6 & 1 010 0.0 0.0 0.0\n') 
-        stream.write('          3 100 0.0 0.0 0.0\n')
-        stream.write('      1 & 3 110 0.0 0.0 0.0\n') 
-        stream.write('      5 & 3 100 0.0 0.0 0.0\n') 
-        stream.write('      6 & 3 100 0.0 0.0 0.0\n') 
-        stream.write('  1 & 5 & 3 110 0.0 0.0 0.0\n') 
-        stream.write('  1 & 6 & 3 110 0.0 0.0 0.0\n') 
-        stream.write('          4 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('      1 & 4 110 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n') 
-        stream.write('      5 & 4 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')  
-        stream.write('      6 & 4 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')  
-        stream.write('  1 & 5 & 4 110 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')  
-        stream.write('  1 & 6 & 4 110 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
-        stream.write('          2 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
-        stream.write('      3 & 2 110 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
-        stream.write('      4 & 2 110 1.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UXY\n') 
-        stream.write('      5 & 2 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
-        stream.write('      6 & 2 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
-        stream.write('  3 & 5 & 2 110 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
-        stream.write('  3 & 6 & 2 110 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
-        stream.write('  4 & 5 & 2 110 1.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UXY\n') 
-        stream.write('  4 & 6 & 2 110 1.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UXY\n') 
+    if BCtype == 'Periodic':
+        stream.write('  PARAMETERS\n')
+        stream.write('    DISPLACEMENT_GRADIENT: PERIODIC, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('  END_PARAMETERS\n')
+        stream.write('  CODES, NODES\n')
+        stream.write('    1 & 3 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 3 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 4 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 4 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 3 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 3 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 4 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 4 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        
+    elif BCtype == 'Linear':
+        stream.write('  PARAMETERS\n')
+        stream.write('    DISPLACEMENT_GRADIENT: LINEAR, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('  END_PARAMETERS\n')
+        stream.write('  CODES, NODES\n')
+        stream.write('            1 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('            2 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('            3 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('            4 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('            5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('            6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        1 & 3 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        1 & 4 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        1 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        1 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        2 & 3 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        2 & 4 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        2 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        2 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        3 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        3 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')   
+        stream.write('        4 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('        4 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 3 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 3 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 4 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    1 & 4 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 3 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 3 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 4 & 5 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+        stream.write('    2 & 4 & 6 111 0.0 0.0 0.0, DISCRETE_FUNCTIONS= DGRAD\n')
+            
+    elif BCtype == 'Standard' or BCtype == 'Manual':
+        stream.write('  CODES, NODES\n')
+        if iload == '11' or iload == 'ZZ':
+            # Longitudinal tension in ZZ
+            stream.write('            5 001 0.0 0.0 0.0\n')
+            stream.write('        1 & 5 001 0.0 0.0 0.0\n')
+            stream.write('        2 & 5 001 0.0 0.0 0.0\n')
+            stream.write('        3 & 5 001 0.0 0.0 0.0\n')
+            stream.write('        4 & 5 001 0.0 0.0 0.0\n')
+            stream.write('    1 & 3 & 5 001 0.0 0.0 0.0\n')
+            stream.write('    1 & 4 & 5 001 0.0 0.0 0.0\n')
+            stream.write('    2 & 3 & 5 001 0.0 0.0 0.0\n')
+            stream.write('    2 & 4 & 5 001 0.0 0.0 0.0\n')
+            stream.write('            6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        1 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        2 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        3 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('    1 & 3 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('    1 & 4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('    2 & 3 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('    2 & 4 & 6 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+        elif iload == '22' or iload == 'XX':
+            # Transverse tension in XX
+            stream.write('            1 100 0.0 0.0 0.0\n')
+            stream.write('        3 & 1 100 0.0 0.0 0.0\n')
+            stream.write('        4 & 1 100 0.0 0.0 0.0\n')        
+            stream.write('        5 & 1 100 0.0 0.0 0.0\n')
+            stream.write('        6 & 1 100 0.0 0.0 0.0\n')
+            stream.write('    3 & 5 & 1 100 0.0 0.0 0.0\n')
+            stream.write('    3 & 6 & 1 100 0.0 0.0 0.0\n')
+            stream.write('    4 & 5 & 1 100 0.0 0.0 0.0\n')
+            stream.write('    4 & 6 & 1 100 0.0 0.0 0.0\n')
+            stream.write('            2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        3 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        4 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        5 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        6 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('    3 & 5 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('    3 & 6 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('    4 & 5 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('    4 & 6 & 2 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+        elif iload == '33' or iload == 'YY':
+            # Transverse tension in YY
+            stream.write('            3 010 0.0 0.0 0.0\n')
+            stream.write('        1 & 3 010 0.0 0.0 0.0\n')
+            stream.write('        2 & 3 010 0.0 0.0 0.0\n')
+            stream.write('        5 & 3 010 0.0 0.0 0.0\n')
+            stream.write('        6 & 3 010 0.0 0.0 0.0\n')
+            stream.write('    1 & 5 & 3 010 0.0 0.0 0.0\n')
+            stream.write('    1 & 6 & 3 010 0.0 0.0 0.0\n')
+            stream.write('    2 & 5 & 3 010 0.0 0.0 0.0\n')
+            stream.write('    2 & 6 & 3 010 0.0 0.0 0.0\n')
+            stream.write('            4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        1 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        2 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        5 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        6 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('    1 & 5 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('    1 & 6 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('    2 & 5 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('    2 & 6 & 4 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+        elif iload == '23' or iload == 'XY':
+            # Transverse shear
+            stream.write('          1 010 0.0 0.0 0.0\n') 
+            stream.write('      5 & 1 010 0.0 0.0 0.0\n') 
+            stream.write('      6 & 1 010 0.0 0.0 0.0\n') 
+            stream.write('          3 100 0.0 0.0 0.0\n')
+            stream.write('      1 & 3 110 0.0 0.0 0.0\n') 
+            stream.write('      5 & 3 100 0.0 0.0 0.0\n') 
+            stream.write('      6 & 3 100 0.0 0.0 0.0\n') 
+            stream.write('  1 & 5 & 3 110 0.0 0.0 0.0\n') 
+            stream.write('  1 & 6 & 3 110 0.0 0.0 0.0\n') 
+            stream.write('          4 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('      1 & 4 110 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n') 
+            stream.write('      5 & 4 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')  
+            stream.write('      6 & 4 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')  
+            stream.write('  1 & 5 & 4 110 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')  
+            stream.write('  1 & 6 & 4 110 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('          2 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('      3 & 2 110 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
+            stream.write('      4 & 2 110 1.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UXY\n') 
+            stream.write('      5 & 2 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
+            stream.write('      6 & 2 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
+            stream.write('  3 & 5 & 2 110 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
+            stream.write('  3 & 6 & 2 110 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n') 
+            stream.write('  4 & 5 & 2 110 1.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UXY\n') 
+            stream.write('  4 & 6 & 2 110 1.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UXY\n')
+        elif iload == '13' or iload == 'YZ':
+            # Transverse pure shear
+            stream.write('            3 001 0.0 0.0 0.0\n')
+            stream.write('        1 & 3 001 0.0 0.0 0.0\n')
+            stream.write('        2 & 3 001 0.0 0.0 0.0\n') 
+            stream.write('        5 & 3 011 0.0 0.0 0.0\n') 
+            stream.write('    2 & 5 & 3 011 0.0 0.0 0.0\n') 
+            stream.write('    1 & 5 & 3 111 0.0 0.0 0.0\n')
+            stream.write('            5 010 0.0 0.0 0.0\n')
+            stream.write('        1 & 5 010 0.0 0.0 0.0\n')
+            stream.write('        2 & 5 010 0.0 0.0 0.0\n')
+            stream.write('            4 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        1 & 4 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        2 & 4 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n') 
+            stream.write('        5 & 4 011 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')  
+            stream.write('    1 & 5 & 4 011 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')  
+            stream.write('    2 & 5 & 4 011 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('            6 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        1 & 6 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        2 & 6 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        3 & 6 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('        4 & 6 011 0.0 1.0 1.0, DISCRETE_FUNCTIONS= F_UYZ\n')
+            stream.write('    1 & 3 & 6 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('    1 & 4 & 6 011 0.0 1.0 1.0, DISCRETE_FUNCTIONS= F_UYZ\n')
+            stream.write('    2 & 3 & 6 010 0.0 1.0 0.0, DISCRETE_FUNCTIONS= F_UYY\n')
+            stream.write('    2 & 4 & 6 011 0.0 1.0 1.0, DISCRETE_FUNCTIONS= F_UYZ\n') 
+        elif iload == '12' or iload == 'XZ':
+            # In-plane pure shear
+            stream.write('            1 001 0.0 0.0 0.0\n')
+            stream.write('        3 & 1 001 0.0 0.0 0.0\n')
+            stream.write('        4 & 1 001 0.0 0.0 0.0\n')
+            stream.write('        5 & 1 101 0.0 0.0 0.0\n')      
+            stream.write('    5 & 3 & 1 111 0.0 0.0 0.0\n')
+            stream.write('    5 & 4 & 1 101 0.0 0.0 0.0\n')
+            stream.write('            5 100 0.0 0.0 0.0\n')
+            stream.write('        3 & 5 100 0.0 0.0 0.0\n')
+            stream.write('        4 & 5 100 0.0 0.0 0.0\n')
+            stream.write('            2 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        3 & 2 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        4 & 2 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('        5 & 2 001 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')        
+            stream.write('    5 & 3 & 2 101 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('    5 & 4 & 2 101 0.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UZZ\n')
+            stream.write('            6 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        1 & 6 101 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        2 & 6 101 1.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UXZ\n')
+            stream.write('        3 & 6 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('        4 & 6 100 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('    1 & 3 & 6 101 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('    1 & 4 & 6 101 1.0 0.0 0.0, DISCRETE_FUNCTIONS= F_UXX\n')
+            stream.write('    2 & 3 & 6 101 1.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UXZ\n')
+            stream.write('    2 & 4 & 6 101 1.0 0.0 1.0, DISCRETE_FUNCTIONS= F_UXZ\n')
+        
     stream.write('  END_CODES\n')
     stream.write('END_BOUNDARY_CONDITIONS\n')
     stream.write('$-------------------------------------------------------------------\n')

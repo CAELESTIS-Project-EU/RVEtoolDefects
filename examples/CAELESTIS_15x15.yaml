@@ -6,6 +6,12 @@
 General:
     JobName: CAELESTIS_15x15
     output_path: output
+    Machine: 'MareNostrum5'
+    Cores: 112
+    QoS: 'gp_debug'
+    Account: 'bsc21'
+    Execution_timeHH: '02'
+    Project: 'CAELESTIS'
 
 ###############################################################################
 # Material properties

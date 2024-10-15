@@ -1,10 +1,14 @@
-import yaml
 import os
-from RVE_gen.rve_generator import RVEgen
+import yaml
+import argparse
+try:
+    from RVE_gen.rve_generator import RVEgen
+except:
+    print('Reading from existing files ...')
+    pass
 from RVE_mesher.src import RVEmsh
 from RVE_solver.src import RVEsol
 import numpy as num
-#num.random.seed(1) #0, 42, pilist breaks 
 
 def runRVEtool(parameters_file):
     # Load configuration file
@@ -29,9 +33,12 @@ def runRVEtool(parameters_file):
 
     # RVE geometry generator
     #-------------------------------------------------------------------
-    RVEgen.RVE_gen_start(JobName, gen_output, params['RVE_gen'])
-
-    # RVE geometry mesher
+    try:
+        RVEgen.RVE_gen_start(JobName, gen_output, params['RVE_gen'])
+    except:
+        pass
+        
+    # RVE mesher
     #-------------------------------------------------------------------
     RVEmsh.RVE_msh_start(JobName, mesh_output, gen_output, params['RVE_mesher'])
 
@@ -40,33 +47,34 @@ def runRVEtool(parameters_file):
     # Create load case scenarios
     for iload in params['RVE_solver']['listloads']:
         outputPath = os.path.join(solve_output, JobName+'-'+iload)
-        if params['RVE_mesher']['domain'] == '2D' and iload in ['11','22','12']:
+        if params['RVE_mesher']['domain'] == '2D' and iload in ['11','22','12','XX','YY','XY']:
             if not os.path.exists(outputPath):
                 os.makedirs(outputPath)
             # Run Alya writer
             RVEsol.RVE_sol_start(JobName, mesh_output, outputPath, iload,
                                  params['RVE_gen'], params['RVE_mesher'],
-                                 params['RVE_solver'], params['Material'])
+                                 params['RVE_solver'], params['Material'], params['General'])
         elif params['RVE_mesher']['domain'] == '3D':
             if not os.path.exists(outputPath):
                 os.makedirs(outputPath)
             # Run Alya writer
             RVEsol.RVE_sol_start(JobName, mesh_output, outputPath, iload,
                                  params['RVE_gen'], params['RVE_mesher'],
-                                 params['RVE_solver'], params['Material'])
+                                 params['RVE_solver'], params['Material'], params['General'])
         else:
             continue
         
 if __name__=='__main__':
-    
-    #parameters_file = 'Vallmajo2023_5x5.yaml'          # Vallmajo without voids small size
-    #parameters_file = 'Vallmajo2023_15x15.yaml'         # Vallmajo without voids
-    #parameters_file = 'Vallmajo2023_15x15_svoids.yaml' # Vallmajo with small voids 7%
-    #parameters_file = 'Vallmajo2023_15x15_lvoids.yaml' # Vallmajo with small voids 7%
-    #parameters_file = 'Liu2019_5x5.yaml'               # Liu
-    parameters_file = 'CAELESTIS_15x15.yaml'           # CAELESTIS without voids
 
-    parameters_file = os.path.join("examples", parameters_file)
-        
+    RVEtool_parser = argparse.ArgumentParser(description="Run RVEtool from configuration file")
+    RVEtool_parser.add_argument('-e', '--exp-file', type=str, required=True, help="Specify the configuration file path")
+    args = RVEtool_parser.parse_args()
+    exp_file = args.exp_file
+    if os.path.exists(exp_file):
+        print(f"The provided experiment file path is: {exp_file}")
+    else:
+        print(f"Error: The experiment {exp_file} does not exist.")
+        exit(1)
+
     # Run program
-    runRVEtool(parameters_file)    
+    runRVEtool(exp_file)    
